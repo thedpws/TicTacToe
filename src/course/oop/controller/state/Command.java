@@ -1,11 +1,11 @@
 package course.oop.controller.state;
 
 import course.oop.util.Utilities;
-import course.oop.view.Command;
+import course.oop.view.CommandCall;
 
 // has an execute() method. for executing commands internal to game state
-public abstract class Executable {
-    abstract GameState execute(Command c);
+public abstract class Command {
+    abstract GameState execute(CommandCall c);
     abstract String getHelp();
     abstract String getCorrectUsage();
 

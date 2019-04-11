@@ -2,7 +2,7 @@ package course.oop.controller.state;
 
 import course.oop.model.GameConfig;
 import course.oop.util.Utilities;
-import course.oop.view.Command;
+import course.oop.view.CommandCall;
 import course.oop.view.SetupView;
 import course.oop.view.TTTView;
 import javafx.scene.Scene;
@@ -13,7 +13,7 @@ import java.util.Map;
 public class GameSetupState implements GameState {
 
     private GameConfig gameConfig;
-    private Map<String, Executable> commands;
+    private Map<String, Command> commands;
     private TTTView view;
 
     GameSetupState() {
@@ -30,7 +30,7 @@ public class GameSetupState implements GameState {
     }
 
     @Override
-    public GameState consumeCommand(Command c) {
+    public GameState consumeCommand(CommandCall c) {
         String cmd = c.getArgv()[0];
         if (!commands.containsKey(cmd)) return null;
         return commands.get(cmd.toLowerCase()).execute(c);
@@ -48,7 +48,7 @@ public class GameSetupState implements GameState {
     }
 
     @Override
-    public Map<String, Executable> getCommandMap() {
+    public Map<String, Command> getCommandMap() {
         return this.commands;
     }
 
@@ -76,9 +76,9 @@ public class GameSetupState implements GameState {
     }
 
 
-    private Executable SET = new Executable() {
+    private Command SET = new Command() {
         @Override
-        public GameState execute(Command c) {
+        public GameState execute(CommandCall c) {
             final int N_PARAMS = 2;
             if (c.getNumParams() != N_PARAMS) {
                 printCorrectUsage();
@@ -101,9 +101,9 @@ public class GameSetupState implements GameState {
             return "set [attribute] [value]";
         }
     };
-    private final Executable START = new Executable() {
+    private final Command START = new Command() {
         @Override
-        GameState execute(Command c) {
+        GameState execute(CommandCall c) {
             final int N_PARAMS = 0;
             if (c.getNumParams() != N_PARAMS) {
                 printCorrectUsage();
@@ -127,9 +127,9 @@ public class GameSetupState implements GameState {
         }
     };
 
-    private final Executable CREATE_PLAYER = new Executable() {
+    private final Command CREATE_PLAYER = new Command() {
         @Override
-        GameState execute(Command c) {
+        GameState execute(CommandCall c) {
             final int N_PARAMS = 3;
             if (c.getNumParams() != N_PARAMS) {
                 printCorrectUsage();

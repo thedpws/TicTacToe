@@ -3,7 +3,7 @@ package course.oop.controller.state;
 import course.oop.model.Game;
 import course.oop.model.GameConfig;
 import course.oop.util.Utilities;
-import course.oop.view.Command;
+import course.oop.view.CommandCall;
 import javafx.scene.Scene;
 
 import java.util.Map;
@@ -25,7 +25,7 @@ public class GameInitState implements GameState {
     }
 
     @Override
-    public GameState consumeCommand(Command c) {
+    public GameState consumeCommand(CommandCall c) {
         return null;
     }
 
@@ -39,7 +39,7 @@ public class GameInitState implements GameState {
     }
 
     @Override
-    public Map<String, Executable> getCommandMap(){
+    public Map<String, Command> getCommandMap(){
         return null;
     }
 

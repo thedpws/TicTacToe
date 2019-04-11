@@ -4,8 +4,7 @@ import course.oop.controller.state.*;
 import course.oop.model.Game;
 import course.oop.model.GameConfig;
 import course.oop.util.Utilities;
-import course.oop.view.Command;
-import course.oop.view.View;
+import course.oop.view.CommandCall;
 import javafx.stage.Stage;
 
 
@@ -36,7 +35,7 @@ public class TTTControllerImpl implements TTTControllerInterface {
     }
 
 
-    public static void consume(Command cmd){
+    public static void consume(CommandCall cmd){
 
         // globally-scoped commands
         if (cmd.getArgAt(0) == null) return;
@@ -86,7 +85,7 @@ public class TTTControllerImpl implements TTTControllerInterface {
         }
     }
 
-    private static void help(Command cmd){
+    private static void help(CommandCall cmd){
         if (cmd.getNumParams() == 1) {
             if (cmd.getArgv()[1].equalsIgnoreCase("help")) {
                 String help = Utilities.HELP_START + "COMMAND\n\thelp [command]\nSYNOPSIS\n\tshows help information." + Utilities.ANSI_RESET;
@@ -97,7 +96,7 @@ public class TTTControllerImpl implements TTTControllerInterface {
                 System.out.println(help);
                 return;
             } else {
-                Executable e = INSTANCE.gameState.getCommandMap().get(cmd.getArgAt(1));
+                Command e = INSTANCE.gameState.getCommandMap().get(cmd.getArgAt(1));
                 if (e != null) {
                     System.out.println(Utilities.HELP_START);
                     e.printHelp();
@@ -111,7 +110,7 @@ public class TTTControllerImpl implements TTTControllerInterface {
         System.out.println(help);
     }
 
-    private static void quit(Command cmd){
+    private static void quit(CommandCall cmd){
         System.exit(0);
     }
 

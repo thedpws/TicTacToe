@@ -1,25 +1,20 @@
 package course.oop.controller.state;
 
-import course.oop.model.Computer;
 import course.oop.model.Game;
 import course.oop.model.Player;
-import course.oop.view.Command;
-import course.oop.view.TTTView;
+import course.oop.view.CommandCall;
 import course.oop.view.TurnView;
-import course.oop.view.View;
-import javafx.application.Platform;
 import javafx.scene.Scene;
 
 import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 import static course.oop.model.Game.NO_WINNER;
 
 public class TurnState implements GameState {
 
-    private Map<String, Executable> commands;
+    private Map<String, Command> commands;
 
     private int player;
     private Game game;
@@ -59,9 +54,9 @@ public class TurnState implements GameState {
         */
 
         this.commands = new HashMap<>();
-        this.commands.put("select", new Executable() {
+        this.commands.put("select", new Command() {
                     @Override
-                    GameState execute(Command c) {
+                    GameState execute(CommandCall c) {
                         final int N_PARAMS = 2;
                         if (c.getNumParams() != N_PARAMS){
                             printCorrectUsage();
@@ -94,9 +89,9 @@ public class TurnState implements GameState {
                         return "select [row_number] [column_number]";
                     }
                 });
-        this.commands.put("print", new Executable() {
+        this.commands.put("print", new Command() {
               @Override
-              GameState execute(Command c) {
+              GameState execute(CommandCall c) {
                   final int N_PARAMS = 0;
                   if (c.getNumParams() != N_PARAMS){
                       printCorrectUsage();
@@ -142,7 +137,7 @@ public class TurnState implements GameState {
         System.out.printf("It's %s's turn!%n", game.getPlayer(player));
     }
     @Override
-    public GameState consumeCommand(Command c) {
+    public GameState consumeCommand(CommandCall c) {
         if (turnOver) return getNextTurnState();
         if (game.getConfig().getTimeout() != 0 && !turnOver && LocalTime.now().isAfter(timeStarted.plusSeconds(game.getConfig().getTimeout()))){
             return getNextTurnState();
@@ -176,7 +171,7 @@ public class TurnState implements GameState {
     }
 
     @Override
-    public Map<String, Executable> getCommandMap(){
+    public Map<String, Command> getCommandMap(){
         return this.commands;
     }
 

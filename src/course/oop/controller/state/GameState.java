@@ -1,6 +1,6 @@
 package course.oop.controller.state;
 
-import course.oop.view.Command;
+import course.oop.view.CommandCall;
 import javafx.scene.Scene;
 
 import java.util.Map;
@@ -8,10 +8,10 @@ import java.util.Map;
 public interface GameState{
 
 
-    GameState consumeCommand(Command c);
+    GameState consumeCommand(CommandCall c);
     String getCommands();
     String getPrompt();
-    Map<String, Executable> getCommandMap();
+    Map<String, Command> getCommandMap();
     void printInitialText();
 
     Scene asScene();

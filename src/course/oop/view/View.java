@@ -5,9 +5,7 @@ import course.oop.controller.TTTControllerImpl;
 import course.oop.util.Utilities;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Scanner;
 
 public class View {
 
@@ -18,7 +16,7 @@ public class View {
 
     public static void interruptTurn(){
         System.out.println("\n");
-        TTTControllerImpl.consume(new Command("\n"));
+        TTTControllerImpl.consume(new CommandCall("\n"));
         printPrompt();
 
     }
@@ -26,7 +24,7 @@ public class View {
     // controller can send commands to itself
     public static void execute(String command){
         System.out.println();
-        TTTControllerImpl.consume(new Command(command));
+        TTTControllerImpl.consume(new CommandCall(command));
         printPrompt();
     }
 

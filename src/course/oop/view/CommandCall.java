@@ -2,12 +2,12 @@ package course.oop.view;
 
 import java.util.Arrays;
 
-public class Command {
+public class CommandCall {
 
     private int argc;
     private String[] argv;
 
-    public Command(String cmd){
+    public CommandCall(String cmd){
         this.argv = cmd.split(" +");
         this.argc = this.argv.length;
     }
