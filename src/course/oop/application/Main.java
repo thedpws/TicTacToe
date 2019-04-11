@@ -10,11 +10,10 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage){
         FileIO.init();
-        TTTControllerImpl controller = new TTTControllerImpl(primaryStage);
+        TTTControllerImpl.initiate(primaryStage);
         primaryStage.setTitle("Tic Tac Toe: The Game");
         primaryStage.show();
-        View.act(controller);
     }
 }

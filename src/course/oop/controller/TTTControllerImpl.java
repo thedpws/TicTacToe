@@ -17,15 +17,26 @@ public class TTTControllerImpl implements TTTControllerInterface {
 
     private Stage primaryStage;
 
-    public TTTControllerImpl(Stage primaryStage){
+    private static TTTControllerImpl singleton;
 
-        this.primaryStage = primaryStage;
-        this.gameState = new InitialState();
-        this.primaryStage.setScene(this.gameState.asScene());
+    public static boolean initiate(Stage primaryStage){
+        if (singleton != null) return false;
+        singleton = new TTTControllerImpl(primaryStage);
+        singleton.primaryStage = primaryStage;
+        singleton.gameState = new InitialState();
+        singleton.primaryStage.setScene(singleton.gameState.asScene());
+        return true;
     }
 
 
-    public void consume(Command cmd){
+    private TTTControllerImpl(Stage s){
+             this.primaryStage = s;
+             this.gameState = new InitialState();
+             this.primaryStage.setScene(this.gameState.asScene());
+    }
+
+
+    public static void consume(Command cmd){
 
         // globally-scoped commands
         if (cmd.getArgAt(0) == null) return;
@@ -47,7 +58,7 @@ public class TTTControllerImpl implements TTTControllerInterface {
 
             // pass other commands to the state
             default: {
-                GameState rval = gameState.consumeCommand(cmd);
+                GameState rval = singleton.gameState.consumeCommand(cmd);
 
                 boolean badCommand = rval == null;
                 if (badCommand) {
@@ -58,24 +69,24 @@ public class TTTControllerImpl implements TTTControllerInterface {
                 // special case - initiate game
                 if (rval instanceof GameInitState){
                     GameInitState s = (GameInitState) rval;
-                    this.game = s.produceGame();
-                    this.gameState = new TurnState(game);
-                    this.primaryStage.setScene(gameState.asScene());
+                    singleton.game = s.produceGame();
+                    singleton.gameState = new TurnState(singleton.game);
+                    singleton.primaryStage.setScene(singleton.gameState.asScene());
                     break;
                 }
 
-                if (this.gameState.getClass() != rval.getClass()){
+                if (singleton.gameState.getClass() != rval.getClass()){
                     rval.printInitialText();
                 }
 
-                this.gameState = rval;
-                this.primaryStage.setScene(rval.asScene());
+                singleton.gameState = rval;
+                singleton.primaryStage.setScene(rval.asScene());
                 break;
             }
         }
     }
 
-    private void help(Command cmd){
+    private static void help(Command cmd){
         if (cmd.getNumParams() == 1) {
             if (cmd.getArgv()[1].equalsIgnoreCase("help")) {
                 String help = Utilities.HELP_START + "COMMAND\n\thelp [command]\nSYNOPSIS\n\tshows help information." + Utilities.ANSI_RESET;
@@ -86,7 +97,7 @@ public class TTTControllerImpl implements TTTControllerInterface {
                 System.out.println(help);
                 return;
             } else {
-                Executable e = gameState.getCommandMap().get(cmd.getArgAt(1));
+                Executable e = singleton.gameState.getCommandMap().get(cmd.getArgAt(1));
                 if (e != null) {
                     System.out.println(Utilities.HELP_START);
                     e.printHelp();
@@ -96,7 +107,7 @@ public class TTTControllerImpl implements TTTControllerInterface {
             }
         }
 
-        final String help = Utilities.HELP_START + "Supported commands: quit, help" + gameState.getCommands() + Utilities.ANSI_RESET;
+        final String help = Utilities.HELP_START + "Supported commands: quit, help" + singleton.gameState.getCommands() + Utilities.ANSI_RESET;
         System.out.println(help);
     }
 
@@ -135,7 +146,7 @@ public class TTTControllerImpl implements TTTControllerInterface {
         return game.getBoardDisplay();
     }
 
-    public String getPrompt(){
-        return this.gameState.getPrompt();
+    public static String getPrompt(){
+        return singleton.gameState.getPrompt();
     }
 }
