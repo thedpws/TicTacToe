@@ -13,6 +13,6 @@ public interface GameState {
     void printInitialText();
 
     Scene asScene();
-}
+}t a
 
 
