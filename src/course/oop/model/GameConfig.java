@@ -16,8 +16,8 @@ public class GameConfig {
 
     private int numPlayers;
     private long timeoutSeconds;
-    private List<Player> players;
-    private boolean[] configs;
+    private final List<Player> players;
+    private final boolean[] configs;
 
     public GameConfig() {
         players = new LinkedList<>();
@@ -82,21 +82,21 @@ public class GameConfig {
     }
 
 
-    private boolean setNumPlayers(int numPlayers) {
+    private void setNumPlayers(int numPlayers) {
         int config = Config.PLAYERS.ordinal();
         this.numPlayers = numPlayers;
         if (this.numPlayers < 0 || this.numPlayers > 2)
             System.out.println(Utilities.ANSI_RED + "Invalid players: " + this.numPlayers + " must be 1 or 2" + Utilities.ANSI_RESET);
 
-        return configs[config] = (MIN_PLAYERS <= this.numPlayers) && (this.numPlayers <= MAX_PLAYERS);
+        configs[config] = (MIN_PLAYERS <= this.numPlayers) && (this.numPlayers <= MAX_PLAYERS);
     }
 
-    private boolean setTimeout(int timeout) {
+    private void setTimeout(int timeout) {
         int config = Config.TIMEOUT.ordinal();
         this.timeoutSeconds = timeout;
         if (this.timeoutSeconds < 0)
             System.out.println(Utilities.ANSI_RED + "Invalid timeout: " + this.timeoutSeconds + "s" + Utilities.ANSI_RESET);
-        return configs[config] = (0 <= this.timeoutSeconds);
+        configs[config] = (0 <= this.timeoutSeconds);
     }
 
     public void createPlayer(String username, String marker, String number) {

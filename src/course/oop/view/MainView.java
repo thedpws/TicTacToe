@@ -8,13 +8,12 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 
 public class MainView implements TTTView {
-    private VBox root;
-    private Scene scene;
+    private final Scene scene;
 
     public MainView() {
         Label title = new Label("Tic-tac-toe: The Game!");
         title.setFont(Font.font(50));
-        root = new VBox();
+        VBox root = new VBox();
         root.setAlignment(Pos.CENTER);
         root.setSpacing(20);
         Button start = new Button("Start");

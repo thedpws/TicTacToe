@@ -64,7 +64,4 @@ public class ResultsView extends TurnView {
         return scene;
     }
 
-    private void onStart() {
-        View.execute("setup");
-    }
 }

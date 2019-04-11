@@ -6,7 +6,7 @@ import static course.oop.model.Game.NO_WINNER;
 
 public class TileGrid implements TileContainer{
 
-    private Tile[][] tiles;
+    private final Tile[][] tiles;
     private TileGrid[] neighborhood;
 
     // nxn grid

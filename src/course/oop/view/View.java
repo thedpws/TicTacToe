@@ -1,14 +1,14 @@
 package course.oop.view;
 
 
-import course.oop.controller.TTTControllerImpl;
+import course.oop.controller.Controller;
 import course.oop.util.Utilities;
 
-public class View {
+class View {
 
     public static void interruptTurn() {
         System.out.println("\n");
-        TTTControllerImpl.consume(new CommandCall("\n"));
+        Controller.consume(new CommandCall("\n"));
         printPrompt();
 
     }
@@ -16,12 +16,12 @@ public class View {
     // controller can send commands to itself
     public static void execute(String command) {
         System.out.println();
-        TTTControllerImpl.consume(new CommandCall(command));
+        Controller.consume(new CommandCall(command));
         printPrompt();
     }
 
     private static void printPrompt() {
-        System.out.print(TTTControllerImpl.getPrompt() + " " + Utilities.EMOJI + ": ");
+        System.out.print(Controller.getPrompt() + " " + Utilities.EMOJI + ": ");
     }
 
 }

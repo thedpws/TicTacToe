@@ -14,11 +14,11 @@ import java.util.Map;
 
 public class EndState implements GameState {
 
-    private Game game;
-    private int endCode;
-    private TTTView view;
+    private final Game game;
+    private final int endCode;
+    private final TTTView view;
 
-    private Map<String, Command> commands;
+    private final Map<String, Command> commands;
 
     EndState(Game game, int endCode) {
         this.view = new ResultsView(game);
@@ -26,30 +26,24 @@ public class EndState implements GameState {
         this.game = game;
 
         String result;
-        switch (endCode) {
-            case Game.TIE: {
-                result = "Tie. Everyone loses.";
-                for (int i = 1; i <= 2; i++) {
-                    Player p = game.getPlayer(i);
-                    p.addLoss();
-                    FileIO.writePlayer(p);
-                    System.out.println("EndState.java: " + p.asEntry());
-                }
-                break;
+        if (endCode == Game.TIE) {
+            result = "Tie. Everyone loses.";
+            for (int i = 1; i <= 2; i++) {
+                Player p = game.getPlayer(i);
+                p.addLoss();
+                FileIO.writePlayer(p);
+                System.out.println("EndState.java: " + p.asEntry());
             }
-
-            default: {
-                int winner = endCode;
-                //int winnerIndex = winner - 1;
-                result = String.format("Player %d wins! Congratulations %s!%n", winner, game.getPlayer(winner));
-                for (int i = 1; i <= 2; i++) {
-                    Player p = game.getPlayer(i);
-                    if (winner == i) p.addWin();
-                    else p.addLoss();
-                    if (p.isHuman()) FileIO.writePlayer(p);
-                    System.out.println("EndState.java: " + p.asEntry());
-                }
-                break;
+        } else {
+            int winner = endCode;
+            //int winnerIndex = winner - 1;
+            result = String.format("Player %d wins! Congratulations %s!%n", winner, game.getPlayer(winner));
+            for (int i = 1; i <= 2; i++) {
+                Player p = game.getPlayer(i);
+                if (winner == i) p.addWin();
+                else p.addLoss();
+                if (p.isHuman()) FileIO.writePlayer(p);
+                System.out.println("EndState.java: " + p.asEntry());
             }
         }
 
@@ -57,9 +51,16 @@ public class EndState implements GameState {
         System.out.println(result);
 
         this.commands = new HashMap<>();
+        Command REMATCH = c -> new GameInitState(game.getConfig());
         commands.put("rematch", REMATCH);
+        Command MAIN_MENU = c -> new InitialState();
         commands.put("mainmenu", MAIN_MENU);
+        Command PRINT = c -> {
+            game.printGameBoard();
+            return EndState.this;
+        };
         commands.put("print", PRINT);
+        Command SETUP = c -> new GameSetupState(game.getConfig());
         commands.put("setup", SETUP);
 
         for (Player p : FileIO.loadHashMap().values()) System.out.println(p.asEntry());
@@ -85,18 +86,12 @@ public class EndState implements GameState {
         //"\u274c";
         System.out.printf("%s%s%s%s%s End Results %s%s%s%s%s%n", circle, circle, circle, circle, circle, cross, cross, cross, cross, cross);
         String result = "";
-        switch (endCode) {
-            case Game.TIE: {
-                result = "Tie. Everyone loses.";
-                break;
-            }
-
-            default: {
-                int winner = endCode;
-                int winnerIndex = winner - 1;
-                result = String.format("Player %d wins! Congratulations %s!%n", winner, game.getPlayer(winner));
-                break;
-            }
+        if (endCode == Game.TIE) {
+            result = "Tie. Everyone loses.";
+        } else {
+            int winner = endCode;
+            int winnerIndex = winner - 1;
+            result = String.format("Player %d wins! Congratulations %s!%n", winner, game.getPlayer(winner));
         }
 
         game.printGameBoard();
@@ -108,13 +103,4 @@ public class EndState implements GameState {
         return this.view.getScene();
     }
 
-    private final Command REMATCH = c -> new GameInitState(game.getConfig());
-
-    private final Command PRINT = c -> {
-        game.printGameBoard();
-        return EndState.this;
-    };
-
-    private final Command MAIN_MENU = c -> new InitialState();
-    private final Command SETUP = c -> new GameSetupState(game.getConfig());
 }

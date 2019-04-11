@@ -2,8 +2,8 @@ package course.oop.model;
 
 public class Marker {
 
-    private String marker;
-    private int playerNumber;
+    private final String marker;
+    private final int playerNumber;
 
     //used only ingame. Purpose is to mark, not to store the marker.
     Marker(int playerNumber, String marker) {

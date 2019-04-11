@@ -4,10 +4,6 @@ package course.oop.model.board;
 import course.oop.model.Marker;
 import course.oop.util.Utilities;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import static course.oop.model.Game.NO_WINNER;
 
 public class Tile implements TileContainer {
@@ -25,7 +21,7 @@ public class Tile implements TileContainer {
 
     private Marker marker;
 
-    private Tile[] neighborhood = new Tile[numDirections];
+    private final Tile[] neighborhood = new Tile[numDirections];
 
     public Tile(){
 

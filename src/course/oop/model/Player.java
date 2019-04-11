@@ -4,7 +4,8 @@ import java.io.Serializable;
 
 public class Player implements Serializable {
     private boolean valid;
-    private String username, password;
+    private final String username;
+    private String password;
     private int marker;
     private int wins, losses; // todo implement for player records
 
@@ -26,10 +27,6 @@ public class Player implements Serializable {
 
     public int getMarkerID() {
         return marker;
-    }
-
-    boolean isValid() {
-        return true;
     }
 
     public void addWin() {

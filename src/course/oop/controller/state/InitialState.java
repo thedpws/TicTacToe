@@ -11,14 +11,15 @@ import java.util.Map;
 // initial
 public class InitialState implements GameState {
 
-    private Map<String, Command> commands;
+    private final Map<String, Command> commands;
 
-    TTTView view;
+    private final TTTView view;
 
 
     public InitialState() {
         this.view = new MainView();
         commands = new HashMap<>();
+        Command SETUP = c -> new GameSetupState();
         commands.put("setup", SETUP);
     }
 
@@ -44,5 +45,4 @@ public class InitialState implements GameState {
         return view.getScene();
     }
 
-    private final Command SETUP = c -> new GameSetupState();
 }

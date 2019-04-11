@@ -14,13 +14,13 @@ import static course.oop.model.Game.NO_WINNER;
 
 public class TurnState implements GameState {
 
-    private Map<String, Command> commands;
+    private final Map<String, Command> commands;
 
-    private int player;
-    private Game game;
-    private LocalTime timeStarted;
+    private final int player;
+    private final Game game;
+    private final LocalTime timeStarted;
     private boolean turnOver;
-    private TurnView view;
+    private final TurnView view;
 
     public TurnState(Game g) {
         this(g, (int) Math.round(Math.random()) + 1);
@@ -34,6 +34,25 @@ public class TurnState implements GameState {
 
         printInitialText();
         this.commands = new HashMap<>();
+        // Game is over!
+        // Next turn!
+        Command SELECT = c -> {
+            String row = c.getArgv()[1];
+            String column = c.getArgv()[2];
+            if (!game.selectTile(row, column, player)) return TurnState.this;
+
+            int winner = game.determineWinner();
+
+            // Game is over!
+            if (winner != NO_WINNER) {
+                turnOver = true;
+                return new EndState(game, winner);
+            }
+
+            // Next turn!
+            turnOver = true;
+            return getNextTurnState();
+        };
         commands.put("select", SELECT);
     }
 
@@ -73,21 +92,4 @@ public class TurnState implements GameState {
         return view.getScene();
     }
 
-    private final Command SELECT = c -> {
-        String row = c.getArgv()[1];
-        String column = c.getArgv()[2];
-        if (!game.selectTile(row, column, player)) return TurnState.this;
-
-        int winner = game.determineWinner();
-
-        // Game is over!
-        if (winner != NO_WINNER) {
-            turnOver = true;
-            return new EndState(game, winner);
-        }
-
-        // Next turn!
-        turnOver = true;
-        return getNextTurnState();
-    };
 }

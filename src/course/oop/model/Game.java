@@ -3,20 +3,16 @@ package course.oop.model;
 import course.oop.model.board.GameBoard;
 import course.oop.util.Utilities;
 
-import java.util.List;
-
 public class Game {
 
     public static final int TIE = 3;
-    public static final int PLAYER_ONE = 1;
-    public static final int PLAYER_TWO = 2;
     public static final int NO_WINNER = 0;
 
     // Config separates the configuration from the actual game itself.
     // This allows for multiple games to use the same static config (rematches)
     // This also allows for serialization of configurations for faster configurations in the future.
-    private GameConfig config;
-    private GameBoard board;
+    private final GameConfig config;
+    private final GameBoard board;
 
     public Game(GameConfig config) {
         this.config = config;
@@ -70,10 +66,6 @@ public class Game {
 
     public String getBoardDisplay() {
         return this.board.getGameBoardDisplay();
-    }
-
-    public String[][] getBoard() {
-        return this.board.getGameBoard();
     }
 
 }

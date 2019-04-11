@@ -6,11 +6,9 @@ import course.oop.util.Utilities;
 import course.oop.view.CommandCall;
 import javafx.scene.Scene;
 
-import java.util.Map;
-
 public class GameInitState implements GameState {
 
-    private GameConfig gameConfig;
+    private final GameConfig gameConfig;
 
     public GameInitState(GameConfig gameConfig) {
         this.gameConfig = gameConfig;

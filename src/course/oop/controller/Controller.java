@@ -2,13 +2,12 @@ package course.oop.controller;
 
 import course.oop.controller.state.*;
 import course.oop.model.Game;
-import course.oop.model.GameConfig;
 import course.oop.util.Utilities;
 import course.oop.view.CommandCall;
 import javafx.stage.Stage;
 
 
-public class TTTControllerImpl implements TTTControllerInterface {
+public class Controller {
 
     private GameState gameState;
 
@@ -16,19 +15,18 @@ public class TTTControllerImpl implements TTTControllerInterface {
 
     private Stage primaryStage;
 
-    private static TTTControllerImpl INSTANCE;
+    private static Controller INSTANCE;
 
-    public static boolean initiate(Stage primaryStage) {
-        if (INSTANCE != null) return false;
-        INSTANCE = new TTTControllerImpl(primaryStage);
+    public static void initiate(Stage primaryStage) {
+        if (INSTANCE != null) return;
+        INSTANCE = new Controller(primaryStage);
         INSTANCE.primaryStage = primaryStage;
         INSTANCE.gameState = new InitialState();
         INSTANCE.primaryStage.setScene(INSTANCE.gameState.asScene());
-        return true;
     }
 
 
-    private TTTControllerImpl(Stage s) {
+    private Controller(Stage s) {
         this.primaryStage = s;
         this.gameState = new InitialState();
         this.primaryStage.setScene(this.gameState.asScene());
@@ -42,7 +40,7 @@ public class TTTControllerImpl implements TTTControllerInterface {
         switch (cmd.getArgAt(0).toLowerCase()) {
 
             case "quit": {
-                quit(cmd);
+                quit();
                 break;
             }
 
@@ -80,39 +78,8 @@ public class TTTControllerImpl implements TTTControllerInterface {
         }
     }
 
-    private static void quit(CommandCall cmd) {
+    private static void quit() {
         System.exit(0);
-    }
-
-
-    @Override
-    public void startNewGame(int numPlayers, int timeoutInSecs) {
-        GameConfig config = this.game.getConfig();
-        config.setAttribute("players", Integer.toString(numPlayers));
-        config.setAttribute("timeout", Integer.toString(timeoutInSecs));
-        if (numPlayers == 1) config.addComputer(2);
-        this.gameState = new TurnState(this.game);
-    }
-
-    @Override
-    public void createPlayer(String username, String marker, int playerNum) {
-        if (this.game == null) this.game = new Game(new GameConfig());
-        this.game.getConfig().createPlayer(username, marker, Integer.toString(playerNum));
-    }
-
-    @Override
-    public boolean setSelection(int row, int col, int currentPlayer) {
-        return game.selectTile(Integer.toString(row), Integer.toString(col), currentPlayer);
-    }
-
-    @Override
-    public int determineWinner() {
-        return game.determineWinner();
-    }
-
-    @Override
-    public String getGameDisplay() {
-        return game.getBoardDisplay();
     }
 
     public static String getPrompt() {

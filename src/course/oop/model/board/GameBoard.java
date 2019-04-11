@@ -4,8 +4,7 @@ import course.oop.model.Marker;
 import course.oop.util.Utilities;
 
 public class GameBoard {
-    private static int N = 3;
-    private TileGrid tiles;
+    private final TileGrid tiles;
     int rotation; //todo implement for rotating boardgame
 
     //todo extend for ultimate tic tac toe
@@ -22,18 +21,19 @@ public class GameBoard {
 
     // Public for future use (when other boards become implemented)
     private static TileGrid createClassicBoard(){
-        TileGrid board = new TileGrid(N);
+        int n = 3;
+        TileGrid board = new TileGrid(n);
 
         // build tiles
-        for (int row = 0; row < N; row++){
-            for (int col = 0; col < N; col++){
+        for (int row = 0; row < n; row++){
+            for (int col = 0; col < n; col++){
                 board.setTile(row, col, new Tile());
             }
         }
 
         // build connections
-        for (int row = 0; row < N; row++){
-            for (int col = 0; col < N; col++){
+        for (int row = 0; row < n; row++){
+            for (int col = 0; col < n; col++){
                 Tile current = board.getTile(row, col);
                 //connect all its neighbors
 
@@ -41,7 +41,7 @@ public class GameBoard {
                     for (int colOffset = -1; colOffset <=1; colOffset++){
                         int nRow = row + rowOffset;
                         int nCol = col + colOffset;
-                        if (!(0 <= nRow && nRow < N && 0 <= nCol && nCol < N)) continue;
+                        if (!(0 <= nRow && nRow < n && 0 <= nCol && nCol < n)) continue;
                         Tile neighbor  = board.getTile(nRow, nCol);
                         if (neighbor == current) continue;
                         //get direction

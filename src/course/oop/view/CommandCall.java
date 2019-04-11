@@ -2,8 +2,8 @@ package course.oop.view;
 
 public class CommandCall {
 
-    private int argc;
-    private String[] argv;
+    private final int argc;
+    private final String[] argv;
 
     public CommandCall(String cmd) {
         this.argv = cmd.split(" +");

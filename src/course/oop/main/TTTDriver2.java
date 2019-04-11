@@ -1,8 +1,6 @@
 package course.oop.main;
 
 
-import course.oop.controller.TTTControllerImpl;
-import course.oop.util.Utilities;
 /*
 class TTTDriver2 {
 
@@ -13,7 +11,7 @@ class TTTDriver2 {
 	}
 	
 	private static void sampleTestCase() {
-		TTTControllerImpl ticTacToe = new TTTControllerImpl();
+		Controller ticTacToe = new Controller();
 		// 1. create players
 		String player_1 = "Ashley";
 		String player_2 = "James";

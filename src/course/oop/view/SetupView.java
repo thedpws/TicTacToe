@@ -20,8 +20,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class SetupView implements TTTView {
-    private GridPane root;
-    private Scene scene;
+    private final Scene scene;
     private ImageView currEmoji1;
     private ImageView currEmoji2;
 
@@ -33,7 +32,7 @@ public class SetupView implements TTTView {
     private final int maxEmoji = 39;
 
     public SetupView() {
-        root = new GridPane();
+        GridPane root = new GridPane();
         View.execute("set players 2");
 
 
