@@ -17,14 +17,14 @@ public class TTTControllerImpl implements TTTControllerInterface {
 
     private Stage primaryStage;
 
-    private static TTTControllerImpl singleton;
+    private static TTTControllerImpl INSTANCE;
 
     public static boolean initiate(Stage primaryStage){
-        if (singleton != null) return false;
-        singleton = new TTTControllerImpl(primaryStage);
-        singleton.primaryStage = primaryStage;
-        singleton.gameState = new InitialState();
-        singleton.primaryStage.setScene(singleton.gameState.asScene());
+        if (INSTANCE != null) return false;
+        INSTANCE = new TTTControllerImpl(primaryStage);
+        INSTANCE.primaryStage = primaryStage;
+        INSTANCE.gameState = new InitialState();
+        INSTANCE.primaryStage.setScene(INSTANCE.gameState.asScene());
         return true;
     }
 
@@ -58,7 +58,7 @@ public class TTTControllerImpl implements TTTControllerInterface {
 
             // pass other commands to the state
             default: {
-                GameState rval = singleton.gameState.consumeCommand(cmd);
+                GameState rval = INSTANCE.gameState.consumeCommand(cmd);
 
                 boolean badCommand = rval == null;
                 if (badCommand) {
@@ -69,18 +69,18 @@ public class TTTControllerImpl implements TTTControllerInterface {
                 // special case - initiate game
                 if (rval instanceof GameInitState){
                     GameInitState s = (GameInitState) rval;
-                    singleton.game = s.produceGame();
-                    singleton.gameState = new TurnState(singleton.game);
-                    singleton.primaryStage.setScene(singleton.gameState.asScene());
+                    INSTANCE.game = s.produceGame();
+                    INSTANCE.gameState = new TurnState(INSTANCE.game);
+                    INSTANCE.primaryStage.setScene(INSTANCE.gameState.asScene());
                     break;
                 }
 
-                if (singleton.gameState.getClass() != rval.getClass()){
+                if (INSTANCE.gameState.getClass() != rval.getClass()){
                     rval.printInitialText();
                 }
 
-                singleton.gameState = rval;
-                singleton.primaryStage.setScene(rval.asScene());
+                INSTANCE.gameState = rval;
+                INSTANCE.primaryStage.setScene(rval.asScene());
                 break;
             }
         }
@@ -97,7 +97,7 @@ public class TTTControllerImpl implements TTTControllerInterface {
                 System.out.println(help);
                 return;
             } else {
-                Executable e = singleton.gameState.getCommandMap().get(cmd.getArgAt(1));
+                Executable e = INSTANCE.gameState.getCommandMap().get(cmd.getArgAt(1));
                 if (e != null) {
                     System.out.println(Utilities.HELP_START);
                     e.printHelp();
@@ -107,7 +107,7 @@ public class TTTControllerImpl implements TTTControllerInterface {
             }
         }
 
-        final String help = Utilities.HELP_START + "Supported commands: quit, help" + singleton.gameState.getCommands() + Utilities.ANSI_RESET;
+        final String help = Utilities.HELP_START + "Supported commands: quit, help" + INSTANCE.gameState.getCommands() + Utilities.ANSI_RESET;
         System.out.println(help);
     }
 
@@ -147,6 +147,6 @@ public class TTTControllerImpl implements TTTControllerInterface {
     }
 
     public static String getPrompt(){
-        return singleton.gameState.getPrompt();
+        return INSTANCE.gameState.getPrompt();
     }
 }
