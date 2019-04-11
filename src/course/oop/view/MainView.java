@@ -7,11 +7,11 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 
-public class MainView implements TTTView{
-    private VBox root ;
+public class MainView implements TTTView {
+    private VBox root;
     private Scene scene;
 
-    public MainView(){
+    public MainView() {
         Label title = new Label("Tic-tac-toe: The Game!");
         title.setFont(Font.font(50));
         root = new VBox();

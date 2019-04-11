@@ -27,21 +27,21 @@ public class Utilities {
     public static String EMOJI = "\uD83D\uDE39";
     public static String BOARD = ANSI_BLUE;
 
-    public static void convert(){
+    public static void convert() {
         String os = System.getProperty("os.name").toLowerCase();
-        if (os.contains("win")){
+        if (os.contains("win")) {
             BOARD = "";
             HELP_START = "";
             ANSI_RESET = "";
             ERR_START = "";
             CIRCLE = " o ";
             CROSS = " x ";
-            EMOJI= "(^.^)";
+            EMOJI = "(^.^)";
             System.err.println("Performing windows conversion...");
         }
     }
 
-    public static int parseIntValue(String value){
+    public static int parseIntValue(String value) {
         int val = Integer.MIN_VALUE;
         try {
             val = Integer.parseInt(value);

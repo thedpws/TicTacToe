@@ -111,8 +111,8 @@ public class EndState implements GameState {
     private final Command REMATCH = c -> new GameInitState(game.getConfig());
 
     private final Command PRINT = c -> {
-            game.printGameBoard();
-            return EndState.this;
+        game.printGameBoard();
+        return EndState.this;
     };
 
     private final Command MAIN_MENU = c -> new InitialState();

@@ -18,12 +18,12 @@ public class Game {
     private GameConfig config;
     private GameBoard board;
 
-    public Game(GameConfig config){
+    public Game(GameConfig config) {
         this.config = config;
         this.board = new GameBoard();
     }
 
-    public boolean selectTile(String row, String col, int playerNumber){
+    public boolean selectTile(String row, String col, int playerNumber) {
         int rowInt = Utilities.parseIntValue(row);
         if (rowInt == Integer.MIN_VALUE) return false;
 
@@ -38,20 +38,20 @@ public class Game {
         return board.select(rowInt, colInt, m);
     }
 
-    public String selectRandomTile(){
+    public String selectRandomTile() {
         return board.selectRandomTile();
     }
 
-    public void printGameBoard(){
+    public void printGameBoard() {
         System.out.println();
         System.out.println(board.getGameBoardDisplay());
     }
 
-    public String[][] getGameBoard(){
+    public String[][] getGameBoard() {
         return this.board.getGameBoard();
     }
 
-    public int determineWinner(){
+    public int determineWinner() {
         int winner = board.hasWinner();
         if (winner != NO_WINNER) return winner;
         if (!board.hasAvailableTiles()) {
@@ -60,15 +60,15 @@ public class Game {
         return NO_WINNER;
     }
 
-    public Player getPlayer(int playerNumber){
+    public Player getPlayer(int playerNumber) {
         return config.getPlayer(playerNumber - 1);
     }
 
-    public GameConfig getConfig(){
+    public GameConfig getConfig() {
         return this.config;
     }
 
-    public String getBoardDisplay(){
+    public String getBoardDisplay() {
         return this.board.getGameBoardDisplay();
     }
 

@@ -1,16 +1,17 @@
 package course.oop.model;
 
-public class Computer extends Player{
+public class Computer extends Player {
 
-    Computer(){
-        this("Bot #" + (int)(Math.random()*1000));
+    Computer() {
+        this("Bot #" + (int) (Math.random() * 1000));
     }
+
     private Computer(String username) {
         super(username, 39);
     }
 
     @Override
-    public boolean isHuman(){
+    public boolean isHuman() {
         return false;
     }
 

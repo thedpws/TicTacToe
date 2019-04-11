@@ -18,7 +18,7 @@ public class TTTControllerImpl implements TTTControllerInterface {
 
     private static TTTControllerImpl INSTANCE;
 
-    public static boolean initiate(Stage primaryStage){
+    public static boolean initiate(Stage primaryStage) {
         if (INSTANCE != null) return false;
         INSTANCE = new TTTControllerImpl(primaryStage);
         INSTANCE.primaryStage = primaryStage;
@@ -28,25 +28,25 @@ public class TTTControllerImpl implements TTTControllerInterface {
     }
 
 
-    private TTTControllerImpl(Stage s){
-             this.primaryStage = s;
-             this.gameState = new InitialState();
-             this.primaryStage.setScene(this.gameState.asScene());
+    private TTTControllerImpl(Stage s) {
+        this.primaryStage = s;
+        this.gameState = new InitialState();
+        this.primaryStage.setScene(this.gameState.asScene());
     }
 
 
-    public static void consume(CommandCall cmd){
+    public static void consume(CommandCall cmd) {
 
         // globally-scoped commands
         if (cmd.getArgAt(0) == null) return;
-        switch (cmd.getArgAt(0).toLowerCase()){
+        switch (cmd.getArgAt(0).toLowerCase()) {
 
             case "quit": {
                 quit(cmd);
                 break;
             }
 
-            case "":{
+            case "": {
                 break;
             }
 
@@ -56,12 +56,12 @@ public class TTTControllerImpl implements TTTControllerInterface {
 
                 boolean badCommand = rval == null;
                 if (badCommand) {
-                    System.out.printf("%sCommand not found: %s%s%n", Utilities.ERR_START, cmd.getArgAt(0),Utilities.ANSI_RESET);
+                    System.out.printf("%sCommand not found: %s%s%n", Utilities.ERR_START, cmd.getArgAt(0), Utilities.ANSI_RESET);
                     break;
                 }
 
                 // special case - initiate game
-                if (rval instanceof GameInitState){
+                if (rval instanceof GameInitState) {
                     GameInitState s = (GameInitState) rval;
                     INSTANCE.game = s.produceGame();
                     INSTANCE.gameState = new TurnState(INSTANCE.game);
@@ -69,7 +69,7 @@ public class TTTControllerImpl implements TTTControllerInterface {
                     break;
                 }
 
-                if (INSTANCE.gameState.getClass() != rval.getClass()){
+                if (INSTANCE.gameState.getClass() != rval.getClass()) {
                     rval.printInitialText();
                 }
 
@@ -80,7 +80,7 @@ public class TTTControllerImpl implements TTTControllerInterface {
         }
     }
 
-    private static void quit(CommandCall cmd){
+    private static void quit(CommandCall cmd) {
         System.exit(0);
     }
 
@@ -115,7 +115,7 @@ public class TTTControllerImpl implements TTTControllerInterface {
         return game.getBoardDisplay();
     }
 
-    public static String getPrompt(){
+    public static String getPrompt() {
         return INSTANCE.gameState.getPrompt();
     }
 }

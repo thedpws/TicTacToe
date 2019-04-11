@@ -6,24 +6,29 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 
-public class ResultsView extends TurnView{
-    public ResultsView(Game g){
+public class ResultsView extends TurnView {
+    public ResultsView(Game g) {
         super(g, 0);
 
         int winnerId = g.determineWinner();
         String winner;
-        switch (winnerId){
-            case 1: winner = g.getPlayer(winnerId).toString(); break;
-            case 2: winner = g.getPlayer(winnerId).toString(); break;
-            case 3: winner = "Nobody"; break;
-            default: winner = "problem"; break;
+        switch (winnerId) {
+            case 1:
+                winner = g.getPlayer(winnerId).toString();
+                break;
+            case 2:
+                winner = g.getPlayer(winnerId).toString();
+                break;
+            case 3:
+                winner = "Nobody";
+                break;
+            default:
+                winner = "problem";
+                break;
         }
         this.status.setText(String.format("%s is the winner! Congratulations!", winner));
         this.status.setAlignment(Pos.TOP_CENTER);
@@ -40,7 +45,7 @@ public class ResultsView extends TurnView{
         Button setup = new Button("return to game setup");
 
         rematch.setOnAction(e -> View.execute("rematch"));
-        mainmenu.setOnAction(e->View.execute("mainmenu"));
+        mainmenu.setOnAction(e -> View.execute("mainmenu"));
         setup.setOnAction(e -> View.execute("setup"));
 
         menu.getChildren().addAll(rematch, setup, mainmenu);

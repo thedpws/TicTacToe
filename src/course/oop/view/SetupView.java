@@ -2,10 +2,6 @@ package course.oop.view;
 
 import course.oop.fileio.FileIO;
 import course.oop.model.Player;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -23,8 +19,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-public class SetupView implements TTTView{
-    private GridPane root ;
+public class SetupView implements TTTView {
+    private GridPane root;
     private Scene scene;
     private ImageView currEmoji1;
     private ImageView currEmoji2;
@@ -36,7 +32,7 @@ public class SetupView implements TTTView{
 
     private final int maxEmoji = 39;
 
-    public SetupView(){
+    public SetupView() {
         root = new GridPane();
         View.execute("set players 2");
 
@@ -78,7 +74,7 @@ public class SetupView implements TTTView{
             currEmoji1.setImage(new Image(String.format("%d.png", (--emoji1) % maxEmoji)));
         });
 
-        player1menu.add(emojiMinus1,0, 1);
+        player1menu.add(emojiMinus1, 0, 1);
         player1menu.add(currEmoji1, 1, 1);
         player1menu.add(emojiPlus1, 2, 1);
 
@@ -123,7 +119,7 @@ public class SetupView implements TTTView{
             emojiMinus2.setDisable(computer);
         });
 
-        player2menu.add(emojiMinus2,0, 1);
+        player2menu.add(emojiMinus2, 0, 1);
         player2menu.add(currEmoji2, 1, 1);
         player2menu.add(emojiPlus2, 2, 1);
         player2menu.add(makeComputer2, 1, 2);
@@ -131,7 +127,6 @@ public class SetupView implements TTTView{
 
 
         scene = new Scene(root, 850, 300);
-
 
 
         root.add(player1menu, 0, 0);
@@ -147,10 +142,6 @@ public class SetupView implements TTTView{
         root.getColumnConstraints().add(new ColumnConstraints(350));
 
         root.getColumnConstraints().add(new ColumnConstraints(200));
-
-
-
-
 
 
         Label timeoutLabel = new Label("Timeout (s) ");
@@ -199,43 +190,10 @@ public class SetupView implements TTTView{
             View.execute("start");
 
         });
-
-        /*
-        root = new VBox();
-        Button start = new Button("set players 2");
-        Button quit = new Button("Quit");
-        Button shit = new Button("Help");
-        Button quickstart = new Button("Quick start");
-
-        quit.setOnAction(e -> View.execute("quit"));
-        shit.setOnAction(e -> View.execute("help"));
-        quickstart.setOnAction(e -> {
-            //⭕ ❌
-            String[] commands = {
-                    "set players 2",
-                    "createplayer player_one x 1",
-                    "createplayer player_two o 2",
-                    "set timeout 10",
-                    "start",
-            };
-            for (String command : commands) View.execute(command);
-        });
-
-        start.setOnAction(e -> onStart());
-        root.getChildren().add(start);
-        root.getChildren().add(quit);
-        root.getChildren().add(shit);
-        root.getChildren().add(quickstart);
-        scene = new Scene(root, 300, 250);
-        */
     }
 
     @Override
     public Scene getScene() {
         return scene;
-    }
-
-    private void onStart() {
-        View.execute("set players 2");
     }
 }

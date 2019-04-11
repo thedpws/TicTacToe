@@ -8,7 +8,7 @@ public class Player implements Serializable {
     private int marker;
     private int wins, losses; // todo implement for player records
 
-    public Player(String username, int marker){
+    public Player(String username, int marker) {
         this.username = username;
         this.marker = marker;
         this.wins = 0;
@@ -16,33 +16,40 @@ public class Player implements Serializable {
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return this.username;
     }
 
-    public String getMarker() {return Integer.toString(marker);}
+    public String getMarker() {
+        return Integer.toString(marker);
+    }
 
-    public int getMarkerID(){ return marker; }
+    public int getMarkerID() {
+        return marker;
+    }
 
-    boolean isValid(){
+    boolean isValid() {
         return true;
     }
 
     public void addWin() {
         this.wins++;
     }
-    public void addLoss(){
+
+    public void addLoss() {
         this.losses++;
     }
 
-    public String asEntry(){
+    public String asEntry() {
         return String.format("%s (%d W, %d L)", this.username, this.wins, this.losses);
     }
 
-    public boolean isHuman(){
+    public boolean isHuman() {
         return true;
     }
 
-    public void updateMarkerID(int id){ this.marker = id;}
+    public void updateMarkerID(int id) {
+        this.marker = id;
+    }
 }
 

@@ -10,7 +10,7 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
     @Override
-    public void start(Stage primaryStage){
+    public void start(Stage primaryStage) {
         FileIO.init();
         TTTControllerImpl.initiate(primaryStage);
         primaryStage.setTitle("Tic Tac Toe: The Game");

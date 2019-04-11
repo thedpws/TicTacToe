@@ -15,12 +15,12 @@ public class GameInitState implements GameState {
     public GameInitState(GameConfig gameConfig) {
         this.gameConfig = gameConfig;
         // user will always be player 1, computer is player 2
-        for (int i = gameConfig.getNumPlayers(); i <= 2; i++){
+        for (int i = gameConfig.getNumPlayers(); i <= 2; i++) {
             gameConfig.addComputer(i);
         }
     }
 
-    public Game produceGame(){
+    public Game produceGame() {
         return new Game(gameConfig);
     }
 
@@ -29,17 +29,13 @@ public class GameInitState implements GameState {
         return null;
     }
 
-    public String getCommands() {
-        return "";
-    }
-
     @Override
-    public String getPrompt(){
+    public String getPrompt() {
         return "Game initialization";
     }
 
     @Override
-    public void printInitialText(){
+    public void printInitialText() {
         System.out.println(Utilities.HELP_START + "Initializing game..." + Utilities.ANSI_RESET);
 
     }

@@ -7,9 +7,8 @@ import java.util.HashMap;
 
 public class FileIO {
 
-    private static void writeHashMap(HashMap<String, Player> map){
-        try
-        {
+    private static void writeHashMap(HashMap<String, Player> map) {
+        try {
             FileOutputStream fos = new FileOutputStream("players.ttt");
             ObjectOutputStream oos = new ObjectOutputStream(fos);
 
@@ -22,9 +21,8 @@ public class FileIO {
         }
     }
 
-    public static void init(){
-        try
-        {
+    public static void init() {
+        try {
             FileOutputStream fos = new FileOutputStream("players.ttt");
             ObjectOutputStream oos = new ObjectOutputStream(fos);
             HashMap<String, Player> players = new HashMap<>();
@@ -47,18 +45,17 @@ public class FileIO {
         writeHashMap(players);
     }
 
-    public static Player loadPlayer(String username){
+    public static Player loadPlayer(String username) {
         HashMap<String, Player> map = loadHashMap();
         return map.get(username);
     }
 
-    public static HashMap<String, Player> loadHashMap(){
-        HashMap<String, Player> map =  null;
-        try
-        {
+    public static HashMap<String, Player> loadHashMap() {
+        HashMap<String, Player> map = null;
+        try {
             FileInputStream fis = new FileInputStream("players.ttt");
             ObjectInputStream ois = new ObjectInputStream(fis);
-            map = (HashMap<String,Player>) ois.readObject();
+            map = (HashMap<String, Player>) ois.readObject();
 
             ois.close();
             fis.close();

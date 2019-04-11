@@ -26,8 +26,8 @@ import java.sql.Time;
 import java.time.LocalTime;
 import java.util.concurrent.TimeUnit;
 
-public class TurnView implements TTTView{
-    protected BorderPane root ;
+public class TurnView implements TTTView {
+    protected BorderPane root;
     protected Label status;
     private GridPane board;
     private Game game;
@@ -37,7 +37,8 @@ public class TurnView implements TTTView{
 
     int n = 100;
 
-    public TurnView(Game game, int player){
+    // TODO Break into functions
+    public TurnView(Game game, int player) {
         this.game = game;
 
         root = new BorderPane();
@@ -46,8 +47,8 @@ public class TurnView implements TTTView{
 
         // CENTER is the game board
         final int N = stringboard.length;
-        for (int row = 0; row < N; row++){
-            for (int col = 0; col < N; col++){
+        for (int row = 0; row < N; row++) {
+            for (int col = 0; col < N; col++) {
                 String mark = stringboard[row][col];
                 if (mark.equals("")) mark = "-1";
                 int emojiID = Integer.parseInt(mark);
@@ -57,8 +58,7 @@ public class TurnView implements TTTView{
                     emoji = new ImageView(new Image("blank.png"));
                     emoji.setFitWidth(n - 5);
                     emoji.setFitHeight(n - 5);
-                }
-                else {
+                } else {
                     emoji = new ImageView(new Image(String.format("%d.png", emojiID)));
                     emoji.setFitWidth(n);
                     emoji.setFitHeight(n);
@@ -82,8 +82,8 @@ public class TurnView implements TTTView{
         StackPane center = new StackPane();
 
         ImageView ttt = new ImageView(new Image("ttt.jpg"));
-        ttt.setFitWidth(n*3);
-        ttt.setFitHeight(n*3);
+        ttt.setFitWidth(n * 3);
+        ttt.setFitHeight(n * 3);
         board.setAlignment(Pos.CENTER);
 
 
@@ -97,11 +97,11 @@ public class TurnView implements TTTView{
         root.setCenter(center);
 
 
-
         Player p = game.getPlayer(player);
         System.out.println("#### Player was " + player);
-        if (player != 0 && player != 3 && !p.isHuman()){
-            Timeline cpu = new Timeline(new KeyFrame(Duration.seconds(1.0), event -> {}));
+        if (player != 0 && player != 3 && !p.isHuman()) {
+            Timeline cpu = new Timeline(new KeyFrame(Duration.seconds(1.0), event -> {
+            }));
             cpu.setOnFinished(event -> View.execute("select " + game.selectRandomTile()));
             cpu.setCycleCount(1);
             cpu.play();
@@ -120,7 +120,10 @@ public class TurnView implements TTTView{
                 clock.setText(String.format("%d", --timeleft));
             }));
             timer.setCycleCount((int) game.getConfig().getTimeout());
-            timer.setOnFinished(event -> {View.interruptTurn(); View.interruptTurn();});
+            timer.setOnFinished(event -> {
+                View.interruptTurn();
+                View.interruptTurn();
+            });
             timer.play();
         }
 

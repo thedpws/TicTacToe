@@ -16,7 +16,7 @@ public class InitialState implements GameState {
     TTTView view;
 
 
-    public InitialState(){
+    public InitialState() {
         this.view = new MainView();
         commands = new HashMap<>();
         commands.put("setup", SETUP);
@@ -35,7 +35,7 @@ public class InitialState implements GameState {
     }
 
     @Override
-    public void printInitialText(){
+    public void printInitialText() {
 
     }
 

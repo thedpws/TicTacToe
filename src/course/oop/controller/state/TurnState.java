@@ -22,11 +22,11 @@ public class TurnState implements GameState {
     private boolean turnOver;
     private TurnView view;
 
-    public TurnState(Game g){
-        this(g, (int) Math.round( Math.random() ) + 1);
+    public TurnState(Game g) {
+        this(g, (int) Math.round(Math.random()) + 1);
     }
 
-    private TurnState(Game g, int player){
+    private TurnState(Game g, int player) {
         this.player = player;
         this.game = g;
         this.view = new TurnView(game, player);
@@ -38,14 +38,15 @@ public class TurnState implements GameState {
     }
 
     @Override
-    public void printInitialText(){
+    public void printInitialText() {
         printGameBoard();
         System.out.printf("It's %s's turn!%n", game.getPlayer(player));
     }
+
     @Override
     public GameState consumeCommand(CommandCall c) {
         if (turnOver) return getNextTurnState();
-        if (game.getConfig().getTimeout() != 0 && !turnOver && LocalTime.now().isAfter(timeStarted.plusSeconds(game.getConfig().getTimeout()))){
+        if (game.getConfig().getTimeout() != 0 && !turnOver && LocalTime.now().isAfter(timeStarted.plusSeconds(game.getConfig().getTimeout()))) {
             return getNextTurnState();
         }
         String cmd = c.getArgv()[0];
@@ -53,16 +54,16 @@ public class TurnState implements GameState {
         return commands.get(cmd.toLowerCase()).execute(c);
     }
 
-    private void printGameBoard(){
+    private void printGameBoard() {
         game.printGameBoard();
     }
 
-    private GameState getNextTurnState(){
-        return new TurnState(game, (player)%2+1);
+    private GameState getNextTurnState() {
+        return new TurnState(game, (player) % 2 + 1);
     }
 
     @Override
-    public String getPrompt(){
+    public String getPrompt() {
         Player p = game.getConfig().getPlayer(player - 1);
         return String.format("%s %s", p, p.getMarker());
     }
@@ -72,21 +73,21 @@ public class TurnState implements GameState {
         return view.getScene();
     }
 
-        private final Command SELECT = c -> {
-            String row = c.getArgv()[1];
-            String column = c.getArgv()[2];
-            if (!game.selectTile(row, column, player)) return TurnState.this;
+    private final Command SELECT = c -> {
+        String row = c.getArgv()[1];
+        String column = c.getArgv()[2];
+        if (!game.selectTile(row, column, player)) return TurnState.this;
 
-            int winner = game.determineWinner();
+        int winner = game.determineWinner();
 
-            // Game is over!
-            if (winner != NO_WINNER) {
-                turnOver = true;
-                return new EndState(game, winner);
-            }
-
-            // Next turn!
+        // Game is over!
+        if (winner != NO_WINNER) {
             turnOver = true;
-            return getNextTurnState();
+            return new EndState(game, winner);
+        }
+
+        // Next turn!
+        turnOver = true;
+        return getNextTurnState();
     };
 }
