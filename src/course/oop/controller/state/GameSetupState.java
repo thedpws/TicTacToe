@@ -24,37 +24,27 @@ public class GameSetupState implements GameState {
         this.view = new SetupView();
         this.gameConfig = config;
         this.commands = new HashMap<>();
-        Command SET = new Command() {
-            @Override
-            public GameState execute(CommandCall c) {
-                String attribute = c.getArgv()[1];
-                String value = c.getArgv()[2];
-                gameConfig.setAttribute(attribute, value);
-                return GameSetupState.this;
-            }
-
+        Command SET = c -> {
+            String attribute = c.getArgv()[1];
+            String value = c.getArgv()[2];
+            gameConfig.setAttribute(attribute, value);
+            return GameSetupState.this;
         };
         this.commands.put("set", SET);
-        Command START = new Command() {
-            @Override
-            public GameState execute(CommandCall c) {
-                if (!gameConfig.isValid()) {
-                    gameConfig.printStatus();
-                    return GameSetupState.this;
-                }
-                return new GameInitState(gameConfig);
-            }
-        };
-        this.commands.put("start", START);
-        Command CREATE_PLAYER = new Command() {
-            @Override
-            public GameState execute(CommandCall c) {
-                String username = c.getArgv()[1];
-                String marker = c.getArgv()[2];
-                String number = c.getArgv()[3];
-                gameConfig.createPlayer(username, marker, number);
+        Command START = c -> {
+            if (!gameConfig.isValid()) {
+                gameConfig.printStatus();
                 return GameSetupState.this;
             }
+            return new GameInitState(gameConfig);
+        };
+        this.commands.put("start", START);
+        Command CREATE_PLAYER = c -> {
+            String username = c.getArgv()[1];
+            String marker = c.getArgv()[2];
+            String number = c.getArgv()[3];
+            gameConfig.createPlayer(username, marker, number);
+            return GameSetupState.this;
         };
         this.commands.put("createplayer", CREATE_PLAYER);
     }
