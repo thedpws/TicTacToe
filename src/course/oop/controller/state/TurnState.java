@@ -33,103 +33,9 @@ public class TurnState implements GameState {
         timeStarted = LocalTime.now();
 
         printInitialText();
-
-        // Enforces the timeout
-        /*
-        turnOver = false;
-        if (game.getConfig().getTimeout() != 0) {
-            Thread t = new Thread(() -> {
-                LocalTime timeStarted = LocalTime.now();
-                while (game.getConfig().getTimeout() != 0 && !turnOver) {
-                    if (LocalTime.now().isAfter(timeStarted.plusSeconds(game.getConfig().getTimeout()))) {
-                        System.out.printf("%n%s timed out.%n", game.getConfig().getPlayer(player - 1));
-                        View.interruptTurn();
-                        break;
-                    }
-                }
-            });
-            Platform.runLater(t);
-            //t.start();
-        }
-        */
-
         this.commands = new HashMap<>();
-        this.commands.put("select", new Command() {
-                    @Override
-                    GameState execute(CommandCall c) {
-                        final int N_PARAMS = 2;
-                        if (c.getNumParams() != N_PARAMS){
-                            printCorrectUsage();
-                            return TurnState.this;
-                        }
-                        String row = c.getArgv()[1];
-                        String column = c.getArgv()[2];
-                        if (!game.selectTile(row, column, player)) return TurnState.this;
-
-                        int winner = game.determineWinner();
-
-                        // Game is over!
-                        if (winner != NO_WINNER) {
-                            turnOver = true;
-                            return new EndState(game, winner);
-                        }
-
-                        // Next turn!
-                        turnOver = true;
-                        return getNextTurnState();
-                    }
-
-                    @Override
-                    public String getHelp() {
-                        return "COMMAND\n\tselect [row_number] [column_number]\nSYNOPSIS\n\tselect tile by its row and column";
-                    }
-
-                    @Override
-                    String getCorrectUsage() {
-                        return "select [row_number] [column_number]";
-                    }
-                });
-        this.commands.put("print", new Command() {
-              @Override
-              GameState execute(CommandCall c) {
-                  final int N_PARAMS = 0;
-                  if (c.getNumParams() != N_PARAMS){
-                      printCorrectUsage();
-                      return TurnState.this;
-                  }
-                  printGameBoard();
-                  return TurnState.this;
-              }
-
-              @Override
-              public String getHelp() {
-                  return "COMMAND\n\tprint\nSYNOPSIS\n\tprints the game board.";
-              }
-
-              @Override
-              String getCorrectUsage() {
-                  return "print";
-              }
-          });
-
-        /*
-        // handles computer players
-        if (game.getPlayer(player) instanceof Computer){
-            Thread computer = new Thread(() -> {
-                try {
-                    TimeUnit.SECONDS.sleep(1);
-                } catch (InterruptedException e){
-                    e.printStackTrace();
-                }
-
-                View.execute("select " + game.selectRandomTile());
-            });
-            computer.start();
-        }
-        */
+        commands.put("select", SELECT);
     }
-
-    //allowed commands: select row column
 
     @Override
     public void printInitialText(){
@@ -147,15 +53,6 @@ public class TurnState implements GameState {
         return commands.get(cmd.toLowerCase()).execute(c);
     }
 
-    @Override
-    public String getCommands() {
-        StringBuilder sb = new StringBuilder();
-        for (String s : this.commands.keySet()){
-            sb.append(String.format(", %s", s));
-        }
-        return sb.toString();
-    }
-
     private void printGameBoard(){
         game.printGameBoard();
     }
@@ -171,13 +68,25 @@ public class TurnState implements GameState {
     }
 
     @Override
-    public Map<String, Command> getCommandMap(){
-        return this.commands;
-    }
-
-
-    @Override
     public Scene asScene() {
         return view.getScene();
     }
+
+        private final Command SELECT = c -> {
+            String row = c.getArgv()[1];
+            String column = c.getArgv()[2];
+            if (!game.selectTile(row, column, player)) return TurnState.this;
+
+            int winner = game.determineWinner();
+
+            // Game is over!
+            if (winner != NO_WINNER) {
+                turnOver = true;
+                return new EndState(game, winner);
+            }
+
+            // Next turn!
+            turnOver = true;
+            return getNextTurnState();
+    };
 }

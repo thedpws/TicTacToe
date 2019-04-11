@@ -9,9 +9,7 @@ public interface GameState{
 
 
     GameState consumeCommand(CommandCall c);
-    String getCommands();
     String getPrompt();
-    Map<String, Command> getCommandMap();
     void printInitialText();
 
     Scene asScene();

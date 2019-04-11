@@ -41,11 +41,6 @@ public class TTTControllerImpl implements TTTControllerInterface {
         if (cmd.getArgAt(0) == null) return;
         switch (cmd.getArgAt(0).toLowerCase()){
 
-            case "help": {
-                help(cmd);
-                break;
-            }
-
             case "quit": {
                 quit(cmd);
                 break;
@@ -83,31 +78,6 @@ public class TTTControllerImpl implements TTTControllerInterface {
                 break;
             }
         }
-    }
-
-    private static void help(CommandCall cmd){
-        if (cmd.getNumParams() == 1) {
-            if (cmd.getArgv()[1].equalsIgnoreCase("help")) {
-                String help = Utilities.HELP_START + "COMMAND\n\thelp [command]\nSYNOPSIS\n\tshows help information." + Utilities.ANSI_RESET;
-                System.out.println(help);
-                return;
-            } else if (cmd.getArgv()[1].equalsIgnoreCase("quit")){
-                String help = Utilities.HELP_START + "COMMAND\n\tquit\nSYNOPSIS\n\tquits the game." + Utilities.ANSI_RESET;
-                System.out.println(help);
-                return;
-            } else {
-                Command e = INSTANCE.gameState.getCommandMap().get(cmd.getArgAt(1));
-                if (e != null) {
-                    System.out.println(Utilities.HELP_START);
-                    e.printHelp();
-                    System.out.println(Utilities.ANSI_RESET);
-                    return;
-                }
-            }
-        }
-
-        final String help = Utilities.HELP_START + "Supported commands: quit, help" + INSTANCE.gameState.getCommands() + Utilities.ANSI_RESET;
-        System.out.println(help);
     }
 
     private static void quit(CommandCall cmd){

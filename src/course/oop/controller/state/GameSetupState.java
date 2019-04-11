@@ -36,20 +36,9 @@ public class GameSetupState implements GameState {
         return commands.get(cmd.toLowerCase()).execute(c);
     }
 
-    public String getCommands() {
-        StringBuilder sb = new StringBuilder();
-        for (String s : this.commands.keySet()) sb.append(String.format(", %s", s));
-        return sb.toString();
-    }
-
     @Override
     public String getPrompt() {
         return "Game Configuration";
-    }
-
-    @Override
-    public Map<String, Command> getCommandMap() {
-        return this.commands;
     }
 
     @Override
@@ -79,78 +68,33 @@ public class GameSetupState implements GameState {
     private Command SET = new Command() {
         @Override
         public GameState execute(CommandCall c) {
-            final int N_PARAMS = 2;
-            if (c.getNumParams() != N_PARAMS) {
-                printCorrectUsage();
-                return GameSetupState.this;
-            }
-
             String attribute = c.getArgv()[1];
             String value = c.getArgv()[2];
             gameConfig.setAttribute(attribute, value);
             return GameSetupState.this;
         }
 
-        @Override
-        public String getHelp() {
-            return "COMMAND\n\tset [attribute] [value]\nSYNOPSIS\n\tsets a game attribute to a certain value.\nGAME ATTRIBUTES\n\tplayers - Number of players\n\ttimeout - Time limit per turn";
-        }
-
-        @Override
-        public String getCorrectUsage() {
-            return "set [attribute] [value]";
-        }
     };
     private final Command START = new Command() {
         @Override
-        GameState execute(CommandCall c) {
-            final int N_PARAMS = 0;
-            if (c.getNumParams() != N_PARAMS) {
-                printCorrectUsage();
-                return GameSetupState.this;
-            }
+        public GameState execute(CommandCall c) {
             if (!gameConfig.isValid()) {
                 gameConfig.printStatus();
                 return GameSetupState.this;
             }
             return new GameInitState(gameConfig);
         }
-
-        @Override
-        public String getHelp() {
-            return "COMMAND\n\tstart\nSYNOPSIS\n\tstarts the game.";
-        }
-
-        @Override
-        String getCorrectUsage() {
-            return "start";
-        }
     };
 
     private final Command CREATE_PLAYER = new Command() {
         @Override
-        GameState execute(CommandCall c) {
-            final int N_PARAMS = 3;
-            if (c.getNumParams() != N_PARAMS) {
-                printCorrectUsage();
-                return GameSetupState.this;
-            }
-
+        public GameState execute(CommandCall c) {
             String username = c.getArgv()[1];
             String marker = c.getArgv()[2];
             String number = c.getArgv()[3];
             gameConfig.createPlayer(username, marker, number);
             return GameSetupState.this;
         }
-
-        @Override
-        public String getHelp() {
-            return "COMMAND\n\tcreateplayer [username] [marker] [number]\nSYNOPSIS\n\tCreates a player.\nNOTE\n\tMarkers must be 1 character only";
-        }
-
-        @Override
-        String getCorrectUsage() {
-            return "createplayer [username] [marker] [number]";
-        }
     };
+
 }

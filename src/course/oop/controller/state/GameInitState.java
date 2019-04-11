@@ -39,11 +39,6 @@ public class GameInitState implements GameState {
     }
 
     @Override
-    public Map<String, Command> getCommandMap(){
-        return null;
-    }
-
-    @Override
     public void printInitialText(){
         System.out.println(Utilities.HELP_START + "Initializing game..." + Utilities.ANSI_RESET);
 
