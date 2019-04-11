@@ -32,6 +32,20 @@ public class Controller {
         this.primaryStage.setScene(this.gameState.asScene());
     }
 
+    private static void printPrompt() {
+        System.out.print(Controller.getPrompt() + " " + Utilities.EMOJI + ": ");
+    }
+
+    public static void interruptTurn() {
+        System.out.println("\n");
+        Controller.consume(new CommandCall("\n"));
+        printPrompt();
+    }
+
+    public static void execute(String s){
+        consume(new CommandCall(s));
+    }
+
 
     public static void consume(CommandCall cmd) {
 

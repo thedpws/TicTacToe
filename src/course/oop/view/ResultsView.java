@@ -1,5 +1,6 @@
 package course.oop.view;
 
+import course.oop.controller.Controller;
 import course.oop.model.Game;
 import javafx.animation.RotateTransition;
 import javafx.geometry.Insets;
@@ -44,9 +45,9 @@ public class ResultsView extends TurnView {
         Button mainmenu = new Button("main menu");
         Button setup = new Button("return to game setup");
 
-        rematch.setOnAction(e -> View.execute("rematch"));
-        mainmenu.setOnAction(e -> View.execute("mainmenu"));
-        setup.setOnAction(e -> View.execute("setup"));
+        rematch.setOnAction(e -> Controller.execute("rematch"));
+        mainmenu.setOnAction(e -> Controller.execute("mainmenu"));
+        setup.setOnAction(e -> Controller.execute("setup"));
 
         menu.getChildren().addAll(rematch, setup, mainmenu);
         this.root.setRight(menu);

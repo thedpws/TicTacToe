@@ -1,5 +1,6 @@
 package course.oop.view;
 
+import course.oop.controller.Controller;
 import course.oop.fileio.FileIO;
 import course.oop.model.Player;
 import javafx.geometry.Pos;
@@ -33,7 +34,7 @@ public class SetupView implements TTTView {
 
     public SetupView() {
         GridPane root = new GridPane();
-        View.execute("set players 2");
+        Controller.execute("set players 2");
 
 
         GridPane player1menu = new GridPane();
@@ -157,7 +158,7 @@ public class SetupView implements TTTView {
 
         start.setOnAction(e -> {
             System.out.printf("Emoji1: %d. Emoji2 %d%n", emoji1, emoji2);
-            View.execute(String.format("set players %d", computer ? 1 : 2));
+            Controller.execute(String.format("set players %d", computer ? 1 : 2));
             // write player 1
             String username1 = usernameCombo1.getEditor().getText();
             username1 = username1.replaceAll("(\\w*).*", "$1");
@@ -165,7 +166,7 @@ public class SetupView implements TTTView {
             Player p1 = FileIO.loadPlayer(username1);
             if (p1 == null) p1 = new Player(username1, emoji1);
             p1.updateMarkerID(emoji1);
-            View.execute(String.format("createplayer %s %d %d", username1, emoji1, 1));
+            Controller.execute(String.format("createplayer %s %d %d", username1, emoji1, 1));
             FileIO.writePlayer(p1);
             System.out.println("SetupView.java: " + p1.asEntry());
 
@@ -177,16 +178,16 @@ public class SetupView implements TTTView {
                 Player p2 = FileIO.loadPlayer(username2);
                 if (p2 == null) p2 = new Player(username2, emoji2);
                 p2.updateMarkerID(emoji1);
-                View.execute(String.format("createplayer %s %d %d", username2, emoji2, 2));
+                Controller.execute(String.format("createplayer %s %d %d", username2, emoji2, 2));
                 FileIO.writePlayer(p2);
                 System.out.println("SetupView.java: " + p2.asEntry());
             }
 
             // set timeout
-            View.execute(String.format("set timeout %d", Integer.parseInt(timeout.getText())));
+            Controller.execute(String.format("set timeout %d", Integer.parseInt(timeout.getText())));
 
 
-            View.execute("start");
+            Controller.execute("start");
 
         });
     }

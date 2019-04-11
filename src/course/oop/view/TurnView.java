@@ -1,5 +1,6 @@
 package course.oop.view;
 
+import course.oop.controller.Controller;
 import course.oop.model.Game;
 import course.oop.model.Player;
 import javafx.animation.KeyFrame;
@@ -51,7 +52,7 @@ public class TurnView implements TTTView {
                 }
                 int finalRow = row;
                 int finalCol = col;
-                emoji.setOnMouseClicked(event -> View.execute(String.format("select %d %d", finalRow, finalCol)));
+                emoji.setOnMouseClicked(event -> Controller.execute(String.format("select %d %d", finalRow, finalCol)));
                 board.add(emoji, col, row);
             }
         }
@@ -83,7 +84,7 @@ public class TurnView implements TTTView {
         if (player != 0 && player != 3 && !p.isHuman()) {
             Timeline cpu = new Timeline(new KeyFrame(Duration.seconds(1.0), event -> {
             }));
-            cpu.setOnFinished(event -> View.execute("select " + game.selectRandomTile()));
+            cpu.setOnFinished(event -> Controller.execute("select " + game.selectRandomTile()));
             cpu.setCycleCount(1);
             cpu.play();
         }
@@ -100,8 +101,8 @@ public class TurnView implements TTTView {
             Timeline timer = new Timeline(new KeyFrame(Duration.seconds(1.0), event -> clock.setText(String.format("%d", --timeleft))));
             timer.setCycleCount((int) game.getConfig().getTimeout());
             timer.setOnFinished(event -> {
-                View.interruptTurn();
-                View.interruptTurn();
+                Controller.interruptTurn();
+                Controller.interruptTurn();
             });
             timer.play();
         }

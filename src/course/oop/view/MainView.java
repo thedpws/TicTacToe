@@ -1,5 +1,6 @@
 package course.oop.view;
 
+import course.oop.controller.Controller;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -20,7 +21,7 @@ public class MainView implements TTTView {
         Button quit = new Button("Quit");
 
         start.setOnAction(e -> onStart());
-        quit.setOnAction(e -> View.execute("quit"));
+        quit.setOnAction(e -> Controller.execute("quit"));
         root.getChildren().addAll(title, start, quit);
 
         this.scene = new Scene(root, 600, 250);
@@ -32,6 +33,6 @@ public class MainView implements TTTView {
     }
 
     private void onStart() {
-        View.execute("setup");
+        Controller.execute("setup");
     }
 }
