@@ -126,7 +126,7 @@ public class SetupView implements TTTView {
         makeComputer2.setAlignment(Pos.CENTER);
 
 
-        scene = new Scene(root, 850, 300);
+        scene = new Scene(root, 800, 600);
 
 
         root.add(player1menu, 0, 0);

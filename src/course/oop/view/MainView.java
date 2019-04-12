@@ -24,7 +24,7 @@ public class MainView implements TTTView {
         quit.setOnAction(e -> Controller.execute("quit"));
         root.getChildren().addAll(title, start, quit);
 
-        this.scene = new Scene(root, 600, 250);
+        this.scene = new Scene(root, 800, 600);
     }
 
     @Override
