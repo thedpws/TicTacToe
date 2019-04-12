@@ -12,18 +12,25 @@ public class MainView implements TTTView {
     private final Scene scene;
 
     public MainView() {
-        Label title = new Label("Tic-tac-toe: The Game!");
-        title.setFont(Font.font(50));
+
+        // Root node
         VBox root = new VBox();
         root.setAlignment(Pos.CENTER);
         root.setSpacing(20);
+
+        // Title page
+        Label title = new Label("Tic-tac-toe: The Game!");
+        title.setFont(Font.font(50));
+
+        // Main Menu
         Button start = new Button("Start");
         Button quit = new Button("Quit");
 
+        // Actions
         start.setOnAction(e -> onStart());
         quit.setOnAction(e -> Controller.execute("quit"));
-        root.getChildren().addAll(title, start, quit);
 
+        root.getChildren().addAll(title, start, quit);
         this.scene = new Scene(root, 800, 600);
     }
 

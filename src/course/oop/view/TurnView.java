@@ -7,6 +7,8 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -17,10 +19,10 @@ import javafx.scene.text.Font;
 import javafx.util.Duration;
 
 public class TurnView implements TTTView {
-    final BorderPane root;
+    Parent root;
     final Label status;
     private Label clock;
-    final Scene scene;
+    Scene scene;
     private long timeleft;
 
     private final int n = 100;
@@ -28,7 +30,7 @@ public class TurnView implements TTTView {
     // TODO Break into functions
     public TurnView(Game game, int player) {
 
-        root = new BorderPane();
+        BorderPane root = new BorderPane();
         GridPane board = new GridPane();
         String[][] stringboard = game.getGameBoard();
 
@@ -107,12 +109,16 @@ public class TurnView implements TTTView {
             timer.play();
         }
 
+
         status = new Label(String.format("It's %s's turn!", game.getPlayer(player)));
         bottom.add(status, 1, 0);
         bottom.setAlignment(Pos.TOP_CENTER);
         status.setFont(Font.font(20));
         this.scene = new Scene(root, 800, 600);
+
+        this.root = root;
     }
+
 
     @Override
     public Scene getScene() {
