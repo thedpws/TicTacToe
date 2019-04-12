@@ -34,6 +34,7 @@ public class TurnView implements TTTView{
     private Label clock;
     protected Scene scene;
     private long timeleft;
+    private int rotation;
 
     int n = 100;
 
@@ -43,6 +44,7 @@ public class TurnView implements TTTView{
         root = new BorderPane();
         board = new GridPane();
         String[][] stringboard = game.getGameBoard();
+        this.rotation = game.getRotation();
 
         // CENTER is the game board
         final int N = stringboard.length;
@@ -86,12 +88,27 @@ public class TurnView implements TTTView{
         ttt.setFitHeight(n*3);
         board.setAlignment(Pos.CENTER);
 
+        // Buttons for rotating
+        Button rotateR = new Button("Rotate <=");
+        rotateR.setOnAction(e -> {
+                game.rotateRight();
+                this.rotation = game.getRotation();
+                // update the rotation
+                center.getTransforms().add(new Rotate(0,0,90*this.rotation));
+        });
+
+        Button rotateL = new Button("Rotate =>");
+        rotateL.setOnAction(e -> {
+                game.rotateLeft();
+                this.rotation = game.getRotation();
+                // update the rotation
+                center.getTransforms().add(new Rotate(0,0,90*this.rotation));
+        });
 
         center.getChildren().add(ttt);
         center.getChildren().add(board);
 
         StackPane.setAlignment(ttt, Pos.CENTER);
-
         StackPane.setAlignment(board, Pos.CENTER);
 
         root.setCenter(center);

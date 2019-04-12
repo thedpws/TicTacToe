@@ -6,7 +6,7 @@ import course.oop.util.Utilities;
 public class GameBoard {
     private static int N = 3;
     private TileGrid tiles;
-    int rotation; //todo implement for rotating boardgame
+    int rotation = 1; //todo implement for rotating boardgame
 
     //todo extend for ultimate tic tac toe
     public GameBoard(){
@@ -137,5 +137,15 @@ public class GameBoard {
         Tile random = tiles.getTiles()[row][col];
         if (random.isEmpty()) return String.format("%d %d", row, col);
         else return selectRandomTile();
+    }
+
+	public int getRotation(){
+		return this.rotation;
+	}
+    public void rotateRight(){
+        this.rotation++;
+    }
+    public void rotateLeft(){
+        this.rotation--;
     }
 }

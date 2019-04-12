@@ -76,5 +76,17 @@ public class Game {
         return this.board.getGameBoard();
     }
 
+	public int getRotation(){
+		return this.board.getRotation();
+	}
+
+    public void rotateRight(){
+        this.board.rotateRight();
+    }
+    public void rotateLeft(){
+        this.board.rotateLeft();
+    }
+    }
+
 }
 
