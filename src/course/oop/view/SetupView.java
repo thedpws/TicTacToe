@@ -2,7 +2,7 @@ package course.oop.view;
 
 import course.oop.controller.Controller;
 import course.oop.fileio.FileIO;
-import course.oop.model.players.Player;
+import course.oop.model.Player;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
