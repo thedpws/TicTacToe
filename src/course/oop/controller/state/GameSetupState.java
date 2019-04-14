@@ -47,6 +47,13 @@ public class GameSetupState implements GameState {
             return GameSetupState.this;
         };
         this.commands.put("createplayer", CREATE_PLAYER);
+        // createcomputer [playerNumber]
+        Command CREATE_COMPUTER = c -> {
+            String number = c.getArgv()[1];
+            gameConfig.createComputer(number);
+            return GameSetupState.this;
+        };
+        this.commands.put("createcomputer", CREATE_COMPUTER);
     }
 
     @Override

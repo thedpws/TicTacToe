@@ -47,7 +47,7 @@ public class FileIO {
 
     public static Player loadPlayer(String username) {
         HashMap<String, Player> map = loadHashMap();
-        return map.get(username);
+        return map.getOrDefault(username, new Player(username, 0));
     }
 
     public static HashMap<String, Player> loadHashMap() {

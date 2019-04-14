@@ -101,24 +101,23 @@ public class GameConfig {
 
     public void createPlayer(String username, String marker, String number) {
 
-        // check if player already exists
-        HashMap<String, Player> map = FileIO.loadHashMap();
-        boolean exists = map.containsKey(username);
-
         int markerID = Integer.parseInt(marker);
-        Player p = map.getOrDefault(username, new Player(username, markerID));
-        p.updateMarkerID(markerID);
+        Player p = FileIO.loadPlayer(username);
 
-        // write player
+        // Update Player marker
+        p.updateMarkerID(markerID);
         FileIO.writePlayer(p);
+
         System.out.println("GameConfig.java: " + p.asEntry());
 
         int playerNumber = Utilities.parseIntValue(number);
+        /*
         if (playerNumber == Integer.MIN_VALUE) return;
         if (playerNumber < MIN_PLAYERS || playerNumber > MAX_PLAYERS) {
             System.out.println(Utilities.ANSI_RED + "Invalid player number: " + number + " must be 1 or 2" + Utilities.ANSI_RESET);
             return;
         }
+        */
         int playerIndex = playerNumber - 1;
 
         //append to players to avoid index out of bounds
@@ -141,13 +140,12 @@ public class GameConfig {
         return this.timeoutSeconds;
     }
 
-    public void addComputer(int playerNumber) {
+    public void createComputer(String playerNumberString) {
+        int playerNumber = Utilities.parseIntValue(playerNumberString);
         int playerIndex = playerNumber - 1;
 
-        for (int i = this.numPlayers; i < MAX_PLAYERS; i++) {
-            players.add(i, new Computer());
-        }
-        //while (players.size() < playerNumber) players.add(new Computer());
+        while (players.size() < playerNumber) players.add(null);
+        players.set(playerIndex, new Computer());
     }
 
 }

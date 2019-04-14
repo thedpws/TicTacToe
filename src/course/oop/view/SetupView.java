@@ -24,6 +24,11 @@ public class SetupView implements TTTView {
 
     private boolean computer;
 
+    private Label status = new Label();
+
+    // for holding error messages
+    private Queue<String> statusMessages = new LinkedList<>();
+
     final static int MAX_EMOJI = 39;
     static List<String> ENTRIES;
     int players = 0;
@@ -32,7 +37,7 @@ public class SetupView implements TTTView {
 
     public SetupView() {
         GridPane root = new GridPane();
-        Controller.execute("set players 2");
+        players = 2;
 
 
         GridPane player1menu = new GridPane();
@@ -40,7 +45,7 @@ public class SetupView implements TTTView {
         // Load player entries
         HashMap<String, Player> map = FileIO.loadHashMap();
         ENTRIES = new LinkedList<>();
-        for (Player p :  map.values()) ENTRIES.add(p.asEntry());
+        for (Player p : map.values()) ENTRIES.add(p.asEntry());
 
         // Allow for adding players
         Button addPlayer = new Button("Add player");
@@ -57,36 +62,32 @@ public class SetupView implements TTTView {
             players++;
             PlayerSetup setup = new PlayerSetup(playerNumber);
             playerSetups.add(setup);
-            root.add(setup.getMenu(), playerNumber - 1, 0);
+            root.add(setup.getMenu(), playerNumber, 0);
         });
-        root.add(addPlayer,0, 5);
+        root.add(addPlayer, 0, 5);
 
         players = 2;
+        // Player 1 menu
         PlayerSetup s1 = new PlayerSetup(1);
-        PlayerSetup s2 = new PlayerSetup(2);
         playerSetups.add(s1);
-        playerSetups.add(s2);
-
         root.add(s1.getMenu(), 0, 0);
+
+        // Player 2 menu
+        PlayerSetup s2 = new PlayerSetup(2);
+        playerSetups.add(s2);
         root.add(s2.getMenu(), 1, 0);
 
 
-        scene = new Scene(root, 800, 600);
-
-
-
+        // Start Button
         Button start = new Button("Start game");
         start.setPrefWidth(100);
         start.setAlignment(Pos.CENTER_LEFT);
-
         root.add(start, 2, 1);
 
-        root.getColumnConstraints().add(new ColumnConstraints(350));
-        root.getColumnConstraints().add(new ColumnConstraints(350));
-
-        root.getColumnConstraints().add(new ColumnConstraints(200));
 
 
+
+        // Timeout
         Label timeoutLabel = new Label("Timeout (s) ");
         timeoutLabel.setTextAlignment(TextAlignment.RIGHT);
         timeoutLabel.setAlignment(Pos.BOTTOM_RIGHT);
@@ -97,6 +98,34 @@ public class SetupView implements TTTView {
         HBox timeoutStuff = new HBox();
         timeoutStuff.getChildren().addAll(timeoutLabel, timeout);
         root.add(timeoutStuff, 0, 1);
+
+
+        // Status
+        this.status = new Label();
+        root.add(status, 3, 1);
+
+
+        root.getColumnConstraints().add(new ColumnConstraints(350));
+        root.getColumnConstraints().add(new ColumnConstraints(350));
+        root.getColumnConstraints().add(new ColumnConstraints(200));
+        this.scene = new Scene(root, 800, 600);
+
+        start.setOnAction(e -> {
+            Controller.execute(String.format("set players %d", players));
+            // Iterate through each player, adding them.
+            for (PlayerSetup setup : playerSetups)
+                try {
+                    setup.createPlayer();
+                } catch (BadUsernameException ex) {
+                    addError(ex.getMessage());
+                    //ex.printStackTrace();
+                }
+            // set timeout
+            Controller.execute(String.format("set timeout %d", Integer.parseInt(timeout.getText())));;
+
+            if (statusMessages.isEmpty()) Controller.execute("start");
+            else updateMessages();
+        });
 
 /*
         start.setOnAction(e -> {
@@ -125,19 +154,46 @@ public class SetupView implements TTTView {
                 Controller.execute(String.format("createplayer %s %d %d", username2, emoji2, 2));
                 FileIO.writePlayer(p2);
                 System.out.println("SetupView.java: " + p2.asEntry());
-                */
+            }
 
             // set timeout
             Controller.execute(String.format("set timeout %d", Integer.parseInt(timeout.getText())));
 
 
             Controller.execute("start");
-
         }
+            */
+
+    }
+
+    private void updateMessages() {
+        status.setText("");
+        StringBuilder sb = new StringBuilder();
+        while (!statusMessages.isEmpty()) {
+            String message = statusMessages.poll();
+            sb.append(String.format("%s\n", message));
+        }
+        status.setText(sb.toString());
+    }
 
     @Override
     public Scene getScene() {
         return scene;
+    }
+
+    private void addError(String s){
+        this.statusMessages.add(s);
+    }
+
+    static class BadUsernameException extends Exception {
+        int playerNumber;
+        BadUsernameException(int playerNumber){
+            this.playerNumber = playerNumber;
+        }
+        @Override
+        public String getMessage(){
+           return String.format("Bad username for player %d", playerNumber);
+        }
     }
 }
 
@@ -152,16 +208,25 @@ class PlayerSetup {
 
 
     PlayerSetup(int n){
-        this.menu = createMenu();
         this.n = n;
+        this.menu = createMenu();
     }
 
-    Player getPlayer(){
-        String username = this.usernameCombo.getEditor().getText();
-        Player p = FileIO.loadPlayer(username);
-        p.updateMarkerID(emoji);
-        FileIO.writePlayer(p);
-        return p;
+    void createPlayer() throws SetupView.BadUsernameException {
+        if (computer) {
+            Controller.execute(String.format("createcomputer %d", n));
+            return;
+        } // else
+        String username = getUsername();
+        if (username.equals("")) throw new SetupView.BadUsernameException(n);
+        Controller.execute(String.format("createplayer %s %d %d", username, emoji, n));
+    }
+
+    private String getUsername(){
+        // parses the username from the player name using regex
+        String username = usernameCombo.getEditor().getText();
+        username = username.replaceAll("(\\w*).*", "$1");
+        return username;
     }
 
 
