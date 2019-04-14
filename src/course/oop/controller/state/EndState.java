@@ -31,14 +31,14 @@ public class EndState implements GameState {
             for (int i = 1; i <= 2; i++) {
                 Player p = game.getPlayer(i);
                 p.addLoss();
-                FileIO.writePlayer(p);
+                if (p.isHuman()) FileIO.writePlayer(p);
                 System.out.println("EndState.java: " + p.asEntry());
             }
         } else {
             int winner = endCode;
             //int winnerIndex = winner - 1;
             result = String.format("Player %d wins! Congratulations %s!%n", winner, game.getPlayer(winner));
-            for (int i = 1; i <= 2; i++) {
+            for (int i = 1; i <= game.getConfig().getNumPlayers(); i++) {
                 Player p = game.getPlayer(i);
                 if (winner == i) p.addWin();
                 else p.addLoss();
@@ -47,7 +47,7 @@ public class EndState implements GameState {
             }
         }
 
-        game.printGameBoard();
+        //game.printGameBoard();
         System.out.println(result);
 
         this.commands = new HashMap<>();
@@ -55,11 +55,13 @@ public class EndState implements GameState {
         commands.put("rematch", REMATCH);
         Command MAIN_MENU = c -> new InitialState();
         commands.put("mainmenu", MAIN_MENU);
+        /*
         Command PRINT = c -> {
-            game.printGameBoard();
+            //game.printGameBoard();
             return EndState.this;
         };
         commands.put("print", PRINT);
+         */
         Command SETUP = c -> new GameSetupState(game.getConfig());
         commands.put("setup", SETUP);
 
@@ -94,7 +96,7 @@ public class EndState implements GameState {
             result = String.format("Player %d wins! Congratulations %s!%n", winner, game.getPlayer(winner));
         }
 
-        game.printGameBoard();
+        //game.printGameBoard();
         System.out.println(result);
     }
 

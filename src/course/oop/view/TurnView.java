@@ -29,74 +29,27 @@ public class TurnView implements TTTView {
 
     // TODO Break into functions
     public TurnView(Game game, int player) {
-
         BorderPane root = new BorderPane();
-        GridPane board = new GridPane();
-        String[][] stringboard = game.getGameBoard();
-
-        // CENTER is the game board
-        final int N = stringboard.length;
-        for (int row = 0; row < N; row++) {
-            for (int col = 0; col < N; col++) {
-                String mark = stringboard[row][col];
-                if (mark.equals("")) mark = "-1";
-                int emojiID = Integer.parseInt(mark);
-                ImageView emoji;
-
-                if (emojiID == -1) {
-                    emoji = new ImageView(new Image("blank.png"));
-                    emoji.setFitWidth(n - 5);
-                    emoji.setFitHeight(n - 5);
-                } else {
-                    emoji = new ImageView(new Image(String.format("%d.png", emojiID)));
-                    emoji.setFitWidth(n);
-                    emoji.setFitHeight(n);
-                }
-                int finalRow = row;
-                int finalCol = col;
-                emoji.setOnMouseClicked(event -> Controller.execute(String.format("select %d %d", finalRow, finalCol)));
-                board.add(emoji, col, row);
-            }
-        }
-        ColumnConstraints cMax = new ColumnConstraints(n, n, n);
-        RowConstraints rMax = new RowConstraints(n, n, n);
-        board.getColumnConstraints().addAll(cMax, cMax, cMax);
-        board.getRowConstraints().addAll(rMax, rMax, rMax);
-        // BOTTOM is the person's turn.
-        StackPane center = new StackPane();
-
-        ImageView ttt = new ImageView(new Image("ttt.jpg"));
-        ttt.setFitWidth(n * 3);
-        ttt.setFitHeight(n * 3);
-        board.setAlignment(Pos.CENTER);
-
-
-        center.getChildren().add(ttt);
-        center.getChildren().add(board);
-
-        StackPane.setAlignment(ttt, Pos.CENTER);
-
-        StackPane.setAlignment(board, Pos.CENTER);
+        Parent center = game.getDisplay();
 
         root.setCenter(center);
 
-
+        // If Computer, automate tile selection
         Player p = game.getPlayer(player);
-        System.out.println("#### Player was " + player);
-        if (player != 0 && player != 3 && !p.isHuman()) {
+        if (p.isComputer()) {
             Timeline cpu = new Timeline(new KeyFrame(Duration.seconds(1.0), event -> {
             }));
-            cpu.setOnFinished(event -> Controller.execute("select " + game.selectRandomTile()));
+            //cpu.setOnFinished(event -> Controller.execute("select " + game.selectRandomTile()));
+            cpu.setOnFinished(e -> Controller.execute("select " + game.selectRandomTile()));
             cpu.setCycleCount(1);
             cpu.play();
         }
-
 
         GridPane bottom = new GridPane();
         root.setBottom(bottom);
         timeleft = game.getConfig().getTimeout();
 
-        if (game.getConfig().getTimeout() != 0) {
+        if (game.getConfig().getTimeout() > 0) {
             clock = new Label();
             bottom.add(clock, 0, 0);
             clock.setText(String.format("%d", timeleft));

@@ -1,7 +1,10 @@
 package course.oop.model;
 
+import course.oop.model.board.ClassicBoard;
 import course.oop.model.board.GameBoard;
+import course.oop.model.board.NullPlayer;
 import course.oop.util.Utilities;
+import javafx.scene.layout.StackPane;
 
 public class Game {
 
@@ -16,57 +19,57 @@ public class Game {
 
     public Game(GameConfig config) {
         this.config = config;
-        this.board = new GameBoard();
+        this.board = new ClassicBoard(3);
     }
 
     public boolean selectTile(String row, String col, int playerNumber) {
+        // Parse int values
         int rowInt = Utilities.parseIntValue(row);
         if (rowInt == Integer.MIN_VALUE) return false;
-
         int colInt = Utilities.parseIntValue(col);
         if (colInt == Integer.MIN_VALUE) return false;
 
+        // get marker
         int playerIndex = playerNumber - 1;
         Player p = config.getPlayer(playerIndex);
-
         Marker m = new Marker(playerNumber, p.getMarker());
 
-        return board.select(rowInt, colInt, m);
+        return board.selectTile(rowInt, colInt, m);
     }
 
     public String selectRandomTile() {
         return board.selectRandomTile();
     }
 
+    /*
     public void printGameBoard() {
         System.out.println();
         System.out.println(board.getGameBoardDisplay());
     }
+     */
 
+    /*
     public String[][] getGameBoard() {
         return this.board.getGameBoard();
     }
+    */
 
     public int determineWinner() {
-        int winner = board.hasWinner();
-        if (winner != NO_WINNER) return winner;
-        if (!board.hasAvailableTiles()) {
-            return TIE;
-        }
-        return NO_WINNER;
+        return board.determineWinner();
+    }
+
+    public StackPane getDisplay(){
+        return board.asJavaFXNode();
     }
 
     public Player getPlayer(int playerNumber) {
-        return config.getPlayer(playerNumber - 1);
+        Player p = config.getPlayer(playerNumber - 1);
+        if (p == null) return new NullPlayer();
+        return p;
     }
 
     public GameConfig getConfig() {
         return this.config;
     }
-
-    public String getBoardDisplay() {
-        return this.board.getGameBoardDisplay();
-    }
-
 }
 

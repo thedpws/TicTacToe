@@ -12,13 +12,6 @@ public class GameInitState implements GameState {
 
     public GameInitState(GameConfig gameConfig) {
         this.gameConfig = gameConfig;
-        /*
-        // user will always be player 1, computer is player 2
-        for (int i = gameConfig.getNumPlayers(); i <= 2; i++) {
-            gameConfig.addComputer(i);
-        }
-
-         */
     }
 
     public Game produceGame() {

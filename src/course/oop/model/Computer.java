@@ -15,5 +15,8 @@ public class Computer extends Player {
         return false;
     }
 
+    @Override
+    public boolean isComputer(){ return true; }
+
 
 }

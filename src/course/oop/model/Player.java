@@ -16,6 +16,7 @@ public class Player implements Serializable {
         this.losses = 0;
     }
 
+
     @Override
     public String toString() {
         return this.username;
@@ -44,6 +45,7 @@ public class Player implements Serializable {
     public boolean isHuman() {
         return true;
     }
+    public boolean isComputer(){ return false; }
 
     public void updateMarkerID(int id) {
         this.marker = id;

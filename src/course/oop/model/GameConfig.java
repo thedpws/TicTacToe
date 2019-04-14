@@ -130,6 +130,7 @@ public class GameConfig {
     }
 
     public Player getPlayer(int index) {
+        System.out.println(players);
         if (index < 0 || index >= players.size()) {
             return null;
         }

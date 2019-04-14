@@ -33,9 +33,9 @@ public class TurnState implements GameState {
         timeStarted = LocalTime.now();
 
         printInitialText();
+
+        // setup commands
         this.commands = new HashMap<>();
-        // Game is over!
-        // Next turn!
         Command SELECT = c -> {
             String row = c.getArgv()[1];
             String column = c.getArgv()[2];
@@ -43,22 +43,15 @@ public class TurnState implements GameState {
 
             int winner = game.determineWinner();
 
-            // Game is over!
-            if (winner != NO_WINNER) {
-                turnOver = true;
-                return new EndState(game, winner);
-            }
-
-            // Next turn!
-            turnOver = true;
-            return getNextTurnState();
+            if (winner == 0) return getNextTurnState();
+            return new EndState(game, winner);
         };
         commands.put("select", SELECT);
     }
 
     @Override
     public void printInitialText() {
-        printGameBoard();
+        //printGameBoard();
         System.out.printf("It's %s's turn!%n", game.getPlayer(player));
     }
 
@@ -73,11 +66,14 @@ public class TurnState implements GameState {
         return commands.get(cmd.toLowerCase()).execute(c);
     }
 
+    /*
     private void printGameBoard() {
         game.printGameBoard();
     }
+    */
 
     private GameState getNextTurnState() {
+        System.out.printf("Wow! Current player is %d. Next is %d\n", player, player % 2 + 1);
         return new TurnState(game, (player) % 2 + 1);
     }
 

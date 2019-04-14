@@ -48,6 +48,7 @@ public class Controller {
 
 
     public static void consume(CommandCall cmd) {
+        System.out.println(cmd);
 
         // globally-scoped commands
         if (cmd.getArgAt(0) == null) return;

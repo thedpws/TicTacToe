@@ -6,9 +6,9 @@ import course.oop.util.Utilities;
 
 import static course.oop.model.Game.NO_WINNER;
 
-public class Tile implements TileContainer {
+public class Tile {
 
-    private static final int numDirections = 8;
+    public static final int numDirections = 8;
     public static final int U       = 0;
     public static final int UR      = 1;
     public static final int R       = 2;
@@ -27,13 +27,14 @@ public class Tile implements TileContainer {
 
     }
 
-    @Override
+    //@Override
     public int getOccupantId() {
         if (!isEmpty()) return marker.getPlayerNumber(); else return -1;
     }
 
-    @Override
+    //@Override
     public boolean placeMarker(Marker m) {
+        System.err.println("Placing Marker!!!!!!");
         if (!this.isEmpty()) {
             System.out.println(Utilities.ANSI_RED + "Tile already occupied!" + Utilities.ANSI_RESET);
             return false;
@@ -42,61 +43,35 @@ public class Tile implements TileContainer {
         return true;
     }
 
-    @Override
-    //3 in a row
-    public int findWinner() {
-        if (isEmpty()) return NO_WINNER;
 
-        int playerNumber = getOccupantId();
-
-        //todo only works for N=3. for variable N, use recursion
-        for (int direction = U; direction < numDirections; direction++){
-            Tile neighbor = neighborhood[direction];
-            if (neighbor != null && neighbor.getOccupantId() == playerNumber) {
-                //check for third in a row
-                Tile neighborNeighbor = neighbor.neighborhood[direction];
-                if (neighborNeighbor != null && neighborNeighbor.getOccupantId() == playerNumber) {
-                    return playerNumber;
-                }
-                //check other direction
-                neighborNeighbor = this.neighborhood[reverse(direction)];
-                if (neighborNeighbor != null && neighborNeighbor.getOccupantId() == playerNumber) {
-                    return playerNumber;
-                }
-            }
-        }
-        return NO_WINNER;
-    }
-
-    @Override
+    //@Override
     public boolean hasAvailableTiles(){
         return isEmpty();
     }
 
 
 
-    @Override
+    //@Override
     public boolean isEmpty() {
         return marker == null;
     }
 
-    @Override
-    public void biconnect(int direction, TileContainer t){
-        if (t instanceof Tile) {
-            this.neighborhood[direction] = (Tile) t;
-            ((Tile) t).neighborhood[reverse(direction)] = this;
-        }
+    //@Override
+    public void biconnect(int direction, Tile t){
+        this.neighborhood[direction] = t;
+        t.neighborhood[reverse(direction)] = this;
     }
 
-    @Override
+    //@Override
     public boolean isConnected(TileContainer t){
         for (Tile neighbor : neighborhood)
             if (neighbor == t) return true;
         return false;
     }
 
-    public TileContainer[] getNeighborhood(){
-        return this.neighborhood;
+    public Tile getNeighbor(int direction){
+        if (direction < 0 || direction >= numDirections) return null;
+        return this.neighborhood[direction];
     }
 
     public String getMark(){

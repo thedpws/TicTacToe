@@ -23,6 +23,8 @@ public class GameSetupState implements GameState {
     GameSetupState(GameConfig config) {
         this.view = new SetupView();
         this.gameConfig = config;
+
+        // setup commands
         this.commands = new HashMap<>();
         Command SET = c -> {
             String attribute = c.getArgv()[1];
@@ -30,6 +32,7 @@ public class GameSetupState implements GameState {
             gameConfig.setAttribute(attribute, value);
             return GameSetupState.this;
         };
+        // set
         this.commands.put("set", SET);
         Command START = c -> {
             if (!gameConfig.isValid()) {
@@ -38,6 +41,7 @@ public class GameSetupState implements GameState {
             }
             return new GameInitState(gameConfig);
         };
+        // start
         this.commands.put("start", START);
         Command CREATE_PLAYER = c -> {
             String username = c.getArgv()[1];
@@ -46,6 +50,7 @@ public class GameSetupState implements GameState {
             gameConfig.createPlayer(username, marker, number);
             return GameSetupState.this;
         };
+        // createplayer
         this.commands.put("createplayer", CREATE_PLAYER);
         // createcomputer [playerNumber]
         Command CREATE_COMPUTER = c -> {
@@ -53,6 +58,7 @@ public class GameSetupState implements GameState {
             gameConfig.createComputer(number);
             return GameSetupState.this;
         };
+        // createcomputer
         this.commands.put("createcomputer", CREATE_COMPUTER);
     }
 
