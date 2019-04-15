@@ -1,10 +1,7 @@
 package course.oop.model;
 
 import course.oop.controller.state.GameState;
-import course.oop.model.board.ClassicBoard;
-import course.oop.model.board.GameBoard;
-import course.oop.model.board.NullPlayer;
-import course.oop.model.board.Tile;
+import course.oop.model.board.*;
 import course.oop.util.Utilities;
 import javafx.scene.layout.StackPane;
 
@@ -24,7 +21,8 @@ public class Game {
 
     public Game(GameConfig config) {
         this.config = config;
-        this.board = new ClassicBoard(config.properties(), 3);
+        if (this.config.ultimate) this.board = new UltimateBoard(config.properties(), config.n);
+        else this.board = new ClassicBoard(config.properties(), config.n);
     }
 
     public boolean selectTile(String row, String col, int team, int[] players) {
