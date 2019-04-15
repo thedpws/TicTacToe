@@ -4,205 +4,115 @@ import course.oop.fileio.FileIO;
 import course.oop.model.Game;
 import course.oop.model.Player;
 import course.oop.util.Utilities;
-import course.oop.view.Command;
+import course.oop.view.CommandCall;
 import course.oop.view.ResultsView;
 import course.oop.view.TTTView;
 import javafx.scene.Scene;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class EndState implements GameState {
 
-    private Game game;
-    private int endCode;
-    private TTTView view;
+    private final Game game;
+    private final int endCode;
+    private final TTTView view;
 
-    private Map<String, Executable> commands;
+    private final Map<String, Command> commands;
 
-    EndState(Game game, int endCode){
+    EndState(Game game, int endCode) {
         this.view = new ResultsView(game);
         this.endCode = endCode;
         this.game = game;
 
         String result;
-        switch (endCode){
-            case Game.TIE: {
-                result = "Tie. Everyone loses.";
-                for (int i = 1; i <= 2; i++){
-                    Player p = game.getPlayer(i);
-                    p.addLoss();
-                    FileIO.writePlayer(p);
-                    System.out.println("EndState.java: " + p.asEntry());
-                }
-                break;
+        if (endCode == Game.TIE) {
+            result = "Tie. Everyone loses.";
+            for (List<Player> team : game.getTeams()) for (Player p : team){
+                p.addLoss();
+                if (p.isHuman()) FileIO.writePlayer(p);
             }
-
-            default: {
-                int winner = endCode;
-                //int winnerIndex = winner - 1;
-                result = String.format("Player %d wins! Congratulations %s!%n", winner, game.getPlayer(winner));
-                for (int i = 1; i <= 2; i++){
-                    Player p = game.getPlayer(i);
-                    if (winner == i) p.addWin();
-                    else p.addLoss();
-                    if (p.isHuman()) FileIO.writePlayer(p);
-                    System.out.println("EndState.java: " + p.asEntry());
-                }
-                break;
+        } else {
+            int winningTeam = endCode;
+            //int winnerIndex = winner - 1;
+            StringBuilder s = new StringBuilder("");
+            List<Player> winners = game.getTeam(winningTeam-1);
+            s.append("Congratulations to ").append(winners.get(0));
+            for (int i = 1; i < winners.size(); i++){
+                s.append(", ").append(winners.get(i));
             }
+            for (Player winner : winners) {
+                winner.addWin();
+                if (winner.isHuman()) FileIO.writePlayer(winner);
+            }
+            List<Player> losers = game.getTeam(winningTeam % 2);
+            for (Player loser : losers) {
+                loser.addLoss();
+                if (loser.isHuman()) FileIO.writePlayer(loser);
+            }
+            result = s.toString();
+            /*
+            for (int i = 1; i <= game.getConfig().getNumPlayers(); i++) {
+                Player p = game.getPlayer(i);
+                if (winner == i) p.addWin();
+                else p.addLoss();
+                if (p.isHuman()) FileIO.writePlayer(p);
+                System.out.println("EndState.java: " + p.asEntry());
+            }
+            */
         }
 
-        game.printGameBoard();
+        //game.printGameBoard();
         System.out.println(result);
 
         this.commands = new HashMap<>();
+        Command REMATCH = c -> new GameInitState(game.getConfig());
+        commands.put("rematch", REMATCH);
+        Command MAIN_MENU = c -> new InitialState();
+        commands.put("mainmenu", MAIN_MENU);
+        /*
+        Command PRINT = c -> {
+            //game.printGameBoard();
+            return EndState.this;
+        };
+        commands.put("print", PRINT);
+         */
+        Command SETUP = c -> new GameSetupState();
+        commands.put("setup", SETUP);
 
         for (Player p : FileIO.loadHashMap().values()) System.out.println(p.asEntry());
-
-        this.commands.put("rematch", new Executable(){
-
-                    @Override
-                    public GameState execute(Command c) {
-                        final int N_PARAMS = 0;
-                        if (c.getNumParams() != N_PARAMS) {
-                            printCorrectUsage();
-                            return EndState.this;
-                        }
-
-                        return new GameInitState(game.getConfig());
-                    }
-
-                    @Override
-                    public String getHelp() {
-                        return "COMMAND\n\trematch\nSYNOPSIS\n\tstart a new game using the same configuration.";
-                    }
-
-                    @Override
-                    public String getCorrectUsage() {
-                        return "Usage: rematch";
-                    }
-                });
-        this.commands.put("print", new Executable(){
-
-                    @Override
-                    public GameState execute(Command c) {
-                        final int N_PARAMS = 0;
-                        if (c.getNumParams() != N_PARAMS) {
-                            printCorrectUsage();
-                            return EndState.this;
-                        }
-
-                        game.printGameBoard();
-                        return EndState.this;
-                    }
-
-                    @Override
-                    public String getHelp() {
-                        return "COMMAND\n\tprint\nSYNOPSIS\n\tprint out the game board.";
-                    }
-
-                    @Override
-                    public String getCorrectUsage() {
-                        return "print";
-                    }
-                });
-        this.commands.put("mainmenu", new Executable() {
-                    @Override
-                    GameState execute(Command c) {
-                        final int N_PARAMS = 0;
-                        if (c.getNumParams() != N_PARAMS){
-                            this.printCorrectUsage();
-                            return EndState.this;
-                        }
-
-                        return new InitialState();
-                    }
-
-                    @Override
-                    String getHelp() {
-                        return "COMMAND\n\tmainmenu\nSYNOPSIS\n\tReturn to main menu.";
-                    }
-
-                    @Override
-                    String getCorrectUsage() {
-                        return "mainmenu";
-                    }
-                });
-        this.commands.put("setup", new Executable() {
-                    @Override
-                    GameState execute(Command c) {
-                        final int N_PARAMS = 0;
-                        if (c.getNumParams() != N_PARAMS){
-                            this.printCorrectUsage();
-                            return EndState.this;
-                        }
-
-                        return new GameSetupState(game.getConfig());
-                    }
-
-                    @Override
-                    String getHelp() {
-                        return "COMMAND\n\tsetup\nSYNOPSIS\n\tReturn to game setup menu.";
-                    }
-
-                    @Override
-                    String getCorrectUsage() {
-                        return "setup";
-                    }
-                });
     }
 
     //allowed commands: select row column
     @Override
-    public GameState consumeCommand(Command c) {
+    public GameState consumeCommand(CommandCall c) {
         String cmd = c.getArgv()[0];
         if (!commands.containsKey(cmd)) return null;
         return commands.get(cmd.toLowerCase()).execute(c);
     }
 
     @Override
-    public String getCommands() {
-        StringBuilder sb = new StringBuilder();
-        for (String s : this.commands.keySet()){
-            sb.append(String.format(", %s", s));
-        }
-        return sb.toString();
-    }
-
-    @Override
-    public String getPrompt(){
+    public String getPrompt() {
         return "End-Results";
     }
 
-    @Override
-    public Map<String, Executable> getCommandMap() {
-        return this.commands;
-    }
-
-    @Override
-    public void printInitialText(){
+    public void printInitialText() {
         String circle = Utilities.CIRCLE;
         //"\u2b55";
         String cross = Utilities.CROSS;
-                //"\u274c";
+        //"\u274c";
         System.out.printf("%s%s%s%s%s End Results %s%s%s%s%s%n", circle, circle, circle, circle, circle, cross, cross, cross, cross, cross);
         String result = "";
-        switch (endCode){
-            case Game.TIE: {
-                result = "Tie. Everyone loses.";
-                break;
-            }
-
-            default: {
-                int winner = endCode;
-                int winnerIndex = winner - 1;
-                result = String.format("Player %d wins! Congratulations %s!%n", winner, game.getPlayer(winner));
-                break;
-            }
+        if (endCode == Game.TIE) {
+            result = "Tie. Everyone loses.";
+        } else {
+            int winner = endCode;
+            int winnerIndex = winner - 1;
+            //result = String.format("Player %d wins! Congratulations %s!%n", winner, game.getPlayer(winner));
         }
 
-        game.printGameBoard();
+        //game.printGameBoard();
         System.out.println(result);
     }
 
@@ -210,4 +120,5 @@ public class EndState implements GameState {
     public Scene asScene() {
         return this.view.getScene();
     }
+
 }

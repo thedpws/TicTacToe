@@ -1,17 +1,15 @@
 package course.oop.controller.state;
 
-import course.oop.view.Command;
+import course.oop.view.CommandCall;
 import javafx.scene.Scene;
 
-import java.util.Map;
-
-public interface GameState{
+public interface GameState {
 
 
-    GameState consumeCommand(Command c);
-    String getCommands();
+    GameState consumeCommand(CommandCall c);
+
     String getPrompt();
-    Map<String, Executable> getCommandMap();
+
     void printInitialText();
 
     Scene asScene();

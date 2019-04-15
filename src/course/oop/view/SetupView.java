@@ -1,12 +1,10 @@
 package course.oop.view;
 
+import course.oop.controller.Controller;
 import course.oop.fileio.FileIO;
 import course.oop.model.Player;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -17,142 +15,78 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
-public class SetupView implements TTTView{
-    private GridPane root ;
-    private Scene scene;
-    private ImageView currEmoji1;
-    private ImageView currEmoji2;
-
-    private int emoji1 = 1;
-    private int emoji2 = 1;
+public class SetupView implements TTTView {
+    private final Scene scene;
 
     private boolean computer;
 
-    private final int maxEmoji = 39;
+    private Label status = new Label();
 
-    public SetupView(){
-        root = new GridPane();
-        View.execute("set players 2");
+    // for holding error messages
+    private Queue<String> statusMessages = new LinkedList<>();
+
+    final static int MAX_EMOJI = 39;
+    static List<String> ENTRIES;
+    PriorityQueue<Integer> removedPlayerNumbers = new PriorityQueue<>();
+    LinkedList<PlayerSetup> team1 = new LinkedList<>();
+    LinkedList<PlayerSetup> team2 = new LinkedList<>();
+
+    public SetupView() {
+        GridPane root = new GridPane();
 
 
         GridPane player1menu = new GridPane();
 
+        // Load player entries
         HashMap<String, Player> map = FileIO.loadHashMap();
-        List<String> entries = new LinkedList<>();
-        for (Player p : map.values()) entries.add(p.asEntry());
+        ENTRIES = new LinkedList<>();
+        for (Player p : map.values()) ENTRIES.add(p.asEntry());
 
-        // Enter username:
-        Label usernameLabel1 = new Label("Player 1 ");
-        ComboBox usernameCombo1 = new ComboBox();
-        usernameCombo1.setEditable(true);
-        usernameCombo1.getItems().addAll(entries);
+        // Allow for adding players
+        VBox team1Setups = new VBox();
 
-        // Action handler
-        usernameCombo1.setOnAction(event -> {
-            String username = usernameCombo1.getEditor().getText();
-            username = username.replaceFirst("(\\w*).*", "$1");
-            Player p = FileIO.loadPlayer(username);
-            if (p != null) emoji1 = p.getMarkerID();
-            currEmoji1.setImage(new Image(String.format("%d.png", emoji1 % maxEmoji)));
+        VBox team2Setups = new VBox();
+        // team 1 initial player
+        PlayerSetup initialSetup1 = new PlayerSetup();
+        team1Setups.getChildren().add(initialSetup1.getMenu());
+        team1.add(initialSetup1);
+        // team 2 initial player
+        PlayerSetup initialSetup2 = new PlayerSetup();
+        team2Setups.getChildren().add(initialSetup2.getMenu());
+        team2.add(initialSetup2);
+
+        Button addPlayerTeam2 = new Button("Add player Team 2");
+        addPlayerTeam2.setOnAction(e -> {
+            PlayerSetup setup = new PlayerSetup();
+            team2.add(setup);
+            team2Setups.getChildren().add(setup.getMenu());
         });
 
-        player1menu.add(usernameLabel1, 0, 0);
-        player1menu.add(usernameCombo1, 1, 0);
-
-        // choose an emoji
-        currEmoji1 = new ImageView(new Image(String.format("%d.png", emoji1)));
-        currEmoji1.setFitWidth(200);
-        currEmoji1.setFitHeight(200);
-
-        Button emojiPlus1 = new Button(">");
-        emojiPlus1.setOnAction(e -> currEmoji1.setImage(new Image(String.format("%d.png", ++emoji1 % maxEmoji))));
-        Button emojiMinus1 = new Button("<");
-        emojiMinus1.setOnAction(e -> {
-            if (emoji1 == 0) emoji1 += maxEmoji;
-            currEmoji1.setImage(new Image(String.format("%d.png", (--emoji1) % maxEmoji)));
-        });
-
-        player1menu.add(emojiMinus1,0, 1);
-        player1menu.add(currEmoji1, 1, 1);
-        player1menu.add(emojiPlus1, 2, 1);
-
-        // Enter username:
-        Label usernameLabel2 = new Label("Player 2 ");
-        ComboBox usernameCombo2 = new ComboBox();
-        usernameCombo2.setEditable(true);
-        usernameCombo2.getItems().addAll(entries);
-        usernameCombo2.setOnAction(event -> {
-            String username = usernameCombo2.getEditor().getText();
-            username = username.replaceFirst("(\\w*).*", "$1");
-            Player p = FileIO.loadPlayer(username);
-            if (p != null) emoji2 = p.getMarkerID();
-            currEmoji2.setImage(new Image(String.format("%d.png", emoji2 % maxEmoji)));
-        });
-
-        GridPane player2menu = new GridPane();
-        player2menu.add(usernameLabel2, 0, 0);
-        player2menu.add(usernameCombo2, 1, 0);
-
-
-        currEmoji2 = new ImageView(new Image(String.format("%d.png", emoji2)));
-        currEmoji2.setFitWidth(200);
-        currEmoji2.setFitHeight(200);
-
-        Button emojiPlus2 = new Button(">");
-        emojiPlus2.setOnAction(e -> currEmoji2.setImage(new Image(String.format("%d.png", ++emoji2 % maxEmoji))));
-        Button emojiMinus2 = new Button("<");
-        emojiMinus2.setOnAction(e -> {
-            if (emoji2 == 0) emoji2 += maxEmoji;
-            currEmoji2.setImage(new Image(String.format("%d.png", (--emoji2) % maxEmoji)));
+        Button addPlayerTeam1 = new Button("Add player Team 1");
+        addPlayerTeam1.setOnAction(e -> {
+            PlayerSetup setup = new PlayerSetup();
+            team1.add(setup);
+            team1Setups.getChildren().add(setup.getMenu());
         });
 
 
-        Button makeComputer2 = new Button("Make CPU");
-        makeComputer2.setAlignment(Pos.CENTER);
-        makeComputer2.setOnAction(e -> {
-            computer = !computer;
-            usernameCombo2.setDisable(computer);
-            currEmoji2.setImage(new Image(computer ? "39.png" : String.format("%d.png", emoji2)));
-            emojiPlus2.setDisable(computer);
-            emojiMinus2.setDisable(computer);
-        });
-
-        player2menu.add(emojiMinus2,0, 1);
-        player2menu.add(currEmoji2, 1, 1);
-        player2menu.add(emojiPlus2, 2, 1);
-        player2menu.add(makeComputer2, 1, 2);
-        makeComputer2.setAlignment(Pos.CENTER);
-
-
-        scene = new Scene(root, 850, 300);
-
-
-
-        root.add(player1menu, 0, 0);
-        root.add(player2menu, 1, 0);
-
+        // Start Button
         Button start = new Button("Start game");
         start.setPrefWidth(100);
         start.setAlignment(Pos.CENTER_LEFT);
 
-        root.add(start, 2, 1);
-
-        root.getColumnConstraints().add(new ColumnConstraints(350));
-        root.getColumnConstraints().add(new ColumnConstraints(350));
-
-        root.getColumnConstraints().add(new ColumnConstraints(200));
+        Button mainmenu = new Button("REturn to main menu");
+        mainmenu.setOnAction(e -> Controller.execute("mainmenu"));
 
 
 
 
-
-
+        // Timeout
         Label timeoutLabel = new Label("Timeout (s) ");
         timeoutLabel.setTextAlignment(TextAlignment.RIGHT);
         timeoutLabel.setAlignment(Pos.BOTTOM_RIGHT);
@@ -162,72 +96,58 @@ public class SetupView implements TTTView{
         timeout.setPrefWidth(200);
         HBox timeoutStuff = new HBox();
         timeoutStuff.getChildren().addAll(timeoutLabel, timeout);
-        root.add(timeoutStuff, 0, 1);
 
+
+        // Status
+        this.status = new Label();
+
+
+        this.scene = new Scene(root, 800, 600);
 
         start.setOnAction(e -> {
-            System.out.printf("Emoji1: %d. Emoji2 %d%n", emoji1, emoji2);
-            View.execute(String.format("set players %d", computer ? 1 : 2));
-            // write player 1
-            String username1 = usernameCombo1.getEditor().getText();
-            username1 = username1.replaceAll("(\\w*).*", "$1");
-            System.out.println(username1);
-            Player p1 = FileIO.loadPlayer(username1);
-            if (p1 == null) p1 = new Player(username1, emoji1);
-            p1.updateMarkerID(emoji1);
-            View.execute(String.format("createplayer %s %d %d", username1, emoji1, 1));
-            FileIO.writePlayer(p1);
-            System.out.println("SetupView.java: " + p1.asEntry());
-
-            // write player 2
-            if (!computer) {
-                String username2 = usernameCombo2.getEditor().getText();
-                username2 = username2.replaceAll("(\\w*).*", "$1");
-                System.out.println(username2);
-                Player p2 = FileIO.loadPlayer(username2);
-                if (p2 == null) p2 = new Player(username2, emoji2);
-                p2.updateMarkerID(emoji1);
-                View.execute(String.format("createplayer %s %d %d", username2, emoji2, 2));
-                FileIO.writePlayer(p2);
-                System.out.println("SetupView.java: " + p2.asEntry());
-            }
-
+            //Controller.execute(String.format("set players %d", players));
+            // Iterate through each player, adding them.
+            for (PlayerSetup setup : team1)
+                try {
+                    setup.createPlayer(1);
+                } catch (BadUsernameException ex) {
+                    addError(ex.getMessage());
+                }
+            for (PlayerSetup setup : team2)
+                try {
+                    setup.createPlayer(2);
+                } catch (BadUsernameException ex) {
+                    addError(ex.getMessage());
+                }
             // set timeout
-            View.execute(String.format("set timeout %d", Integer.parseInt(timeout.getText())));
-
-
-            View.execute("start");
-
+            Controller.execute(String.format("set timeout %d", Integer.parseInt(timeout.getText())));;
+            if (statusMessages.isEmpty()) Controller.execute("start");
+            else updateMessages();
         });
 
-        /*
-        root = new VBox();
-        Button start = new Button("set players 2");
-        Button quit = new Button("Quit");
-        Button shit = new Button("Help");
-        Button quickstart = new Button("Quick start");
+        root.getColumnConstraints().add(new ColumnConstraints(100));
+        root.getColumnConstraints().add(new ColumnConstraints(350));
+        root.getColumnConstraints().add(new ColumnConstraints(100));
+        root.getColumnConstraints().add(new ColumnConstraints(350));
+        root.add(addPlayerTeam1, 0, 0);
+        root.add(team1Setups, 1, 0);
+        root.add(addPlayerTeam2, 2, 0);
+        root.add(team2Setups, 3, 0);
+        root.add(timeoutStuff, 0, 1);
+        root.add(status, 3, 1);
+        root.add(mainmenu, 2, 2);
+        root.add(start, 2, 1);
 
-        quit.setOnAction(e -> View.execute("quit"));
-        shit.setOnAction(e -> View.execute("help"));
-        quickstart.setOnAction(e -> {
-            //⭕ ❌
-            String[] commands = {
-                    "set players 2",
-                    "createplayer player_one x 1",
-                    "createplayer player_two o 2",
-                    "set timeout 10",
-                    "start",
-            };
-            for (String command : commands) View.execute(command);
-        });
+    }
 
-        start.setOnAction(e -> onStart());
-        root.getChildren().add(start);
-        root.getChildren().add(quit);
-        root.getChildren().add(shit);
-        root.getChildren().add(quickstart);
-        scene = new Scene(root, 300, 250);
-        */
+    private void updateMessages() {
+        status.setText("");
+        StringBuilder sb = new StringBuilder();
+        while (!statusMessages.isEmpty()) {
+            String message = statusMessages.poll();
+            sb.append(String.format("%s\n", message));
+        }
+        status.setText(sb.toString());
     }
 
     @Override
@@ -235,7 +155,111 @@ public class SetupView implements TTTView{
         return scene;
     }
 
-    private void onStart() {
-        View.execute("set players 2");
+    private void addError(String s){
+        this.statusMessages.add(s);
     }
+
+    static class BadUsernameException extends Exception {
+        int playerNumber;
+        BadUsernameException(int playerNumber){
+            this.playerNumber = playerNumber;
+        }
+        @Override
+        public String getMessage(){
+           return String.format("Bad username for player %d", playerNumber);
+        }
+    }
+}
+
+class PlayerSetup {
+    private ImageView emojiImage;
+    private int emoji = 0;
+    private boolean computer;
+    private final GridPane menu;
+
+    private ComboBox usernameCombo;
+
+
+    PlayerSetup(){
+        this.menu = createMenu();
+    }
+
+    void createPlayer(int teamNumber) throws SetupView.BadUsernameException {
+        if (computer) {
+            Controller.execute(String.format("createcomputer %d", teamNumber));
+            return;
+        } // else
+        String username = getUsername();
+        if (username.equals("")) throw new SetupView.BadUsernameException(teamNumber);
+        Controller.execute(String.format("createplayer %s %d %d", username, emoji, teamNumber));
+    }
+
+    private String getUsername(){
+        // parses the username from the player name using regex
+        String username = usernameCombo.getEditor().getText();
+        username = username.replaceAll("(\\w*).*", "$1");
+        return username;
+    }
+
+
+    GridPane createMenu(){
+        GridPane menu = new GridPane();
+
+        // Username box
+        Label usernameLabel = new Label(String.format("hey"));
+        this.usernameCombo = new ComboBox();
+        usernameCombo.setEditable(true);
+
+        usernameCombo.getItems().addAll(SetupView.ENTRIES);
+
+        // Action handling
+        usernameCombo.setOnAction(event -> {
+            String username = usernameCombo.getEditor().getText();
+            username = username.replaceFirst("(\\w*).*", "$1");
+            Player p = FileIO.loadPlayer(username);
+            if (p.getMarkerID() != Player.DEFAULT_MARKER) emoji = p.getMarkerID();
+            emojiImage.setImage(new Image(String.format("%d.png", emoji % SetupView.MAX_EMOJI)));
+        });
+
+        menu.add(usernameLabel, 0, 0);
+        menu.add(usernameCombo, 1, 0);
+
+        // choose an emoji
+        emojiImage = new ImageView(new Image(String.format("%d.png", emoji)));
+        emojiImage.setFitWidth(200);
+        emojiImage.setFitHeight(200);
+
+        Button emojiPlus = new Button(">");
+        emojiPlus.setOnAction(e -> emojiImage.setImage(new Image(String.format("%d.png", ++emoji % SetupView.MAX_EMOJI))));
+        Button emojiMinus = new Button("<");
+        emojiMinus.setOnAction(e -> {
+            if (emoji == 0) emoji += SetupView.MAX_EMOJI;
+            emojiImage.setImage(new Image(String.format("%d.png", (--emoji) % SetupView.MAX_EMOJI)));
+        });
+
+
+        Button makeComputer = new Button("Make CPU");
+        makeComputer.setAlignment(Pos.CENTER);
+        makeComputer.setOnAction(e -> {
+            computer = !computer;
+            usernameCombo.setDisable(computer);
+            emojiImage.setImage(new Image(computer ? "39.png" : String.format("%d.png", emoji)));
+            emojiPlus.setDisable(computer);
+            emojiMinus.setDisable(computer);
+        });
+
+        menu.add(emojiMinus, 0, 1);
+        menu.add(emojiImage, 1, 1);
+        menu.add(emojiPlus, 2, 1);
+        menu.add(makeComputer, 1, 2);
+        makeComputer.setAlignment(Pos.CENTER);
+
+        return menu;
+    }
+
+    Node getMenu(){
+        return this.menu;
+    }
+
+
 }

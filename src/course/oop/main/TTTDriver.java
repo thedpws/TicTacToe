@@ -1,12 +1,6 @@
 package course.oop.main;
 
-import course.oop.controller.TTTControllerImpl;
-import course.oop.fileio.FileIO;
-import course.oop.model.Player;
 import course.oop.util.Utilities;
-import course.oop.view.View;
-
-import java.util.Scanner;
 
 class TTTDriver {
 
@@ -29,7 +23,7 @@ class TTTDriver {
         //FileIO.init();
 
         //FileIO.init();
-        //TTTControllerImpl c = new TTTControllerImpl();
+        //Controller c = new Controller();
         //View.act(c);
 
     }

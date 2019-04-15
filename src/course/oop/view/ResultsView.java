@@ -1,5 +1,6 @@
 package course.oop.view;
 
+import course.oop.controller.Controller;
 import course.oop.model.Game;
 import javafx.animation.RotateTransition;
 import javafx.geometry.Insets;
@@ -8,43 +9,61 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 
-public class ResultsView extends TurnView{
-    public ResultsView(Game g){
-        super(g, 0);
+public class ResultsView extends TurnView {
+    public ResultsView(Game g) {
 
+        // Inherit from TurnView
+        super(g, 0, new int[]{0});
+
+        // Set winner message
         int winnerId = g.determineWinner();
-        String winner;
-        switch (winnerId){
-            case 1: winner = g.getPlayer(winnerId).toString(); break;
-            case 2: winner = g.getPlayer(winnerId).toString(); break;
-            case 3: winner = "Nobody"; break;
-            default: winner = "problem"; break;
+        String winner = "problem";
+        switch (winnerId) {
+            case 1:
+            case 2:
+                winner = String.format("Team %d", winnerId);
+                break;
+            case 3:
+                winner = "Nobody";
+                break;
         }
-        this.status.setText(String.format("%s is the winner! Congratulations!", winner));
-        this.status.setAlignment(Pos.TOP_CENTER);
-        this.status.setTextAlignment(TextAlignment.CENTER);
-        this.root.setTop(status);
-        this.root.setBottom(null);
+        Label winnerMessage = new Label();
+        winnerMessage.setText(String.format("%s is the winner! Congratulations!", winner));
+        winnerMessage.setAlignment(Pos.TOP_CENTER);
+        winnerMessage.setTextAlignment(TextAlignment.CENTER);
+        winnerMessage.setPadding(new Insets(0,0,500,0));
 
+        this.status.setText("Game is over!");
+
+        BorderPane root = (BorderPane) this.root;
+        //root.setTop(status);
+
+
+
+        // Create menu
         VBox menu = new VBox();
         menu.setSpacing(20.0);
-        menu.setAlignment(Pos.CENTER_LEFT);
+        menu.setAlignment(Pos.CENTER_RIGHT);
         menu.setPadding(new Insets(5));
         Button rematch = new Button("rematch");
         Button mainmenu = new Button("main menu");
         Button setup = new Button("return to game setup");
-
-        rematch.setOnAction(e -> View.execute("rematch"));
-        mainmenu.setOnAction(e->View.execute("mainmenu"));
-        setup.setOnAction(e -> View.execute("setup"));
-
+        rematch.setOnAction(e -> Controller.execute("rematch"));
+        mainmenu.setOnAction(e -> Controller.execute("mainmenu"));
+        setup.setOnAction(e -> Controller.execute("setup"));
         menu.getChildren().addAll(rematch, setup, mainmenu);
-        this.root.setRight(menu);
+
+        // Switch root to Stack Pane
+        StackPane newRoot = new StackPane();
+        newRoot.getChildren().addAll(this.root, menu, winnerMessage);
+        this.root = newRoot;
+
+        this.scene = new Scene(this.root, 800, 600);
 
         RotateTransition rt = new RotateTransition();
         rt.setDuration(Duration.millis(10));
@@ -59,7 +78,4 @@ public class ResultsView extends TurnView{
         return scene;
     }
 
-    private void onStart() {
-        View.execute("setup");
-    }
 }
