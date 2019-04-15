@@ -22,11 +22,16 @@ import java.util.*;
 import static java.lang.System.exit;
 
 public class ClassicBoard implements GameBoard {
+
+    ClassicBoard[] neighbors = new ClassicBoard[Tile.numDirections];
+
+    Marker m;
+
     private static double x = 400;
     private static double y = 300;
     Tile[][] tiles;
     int n;
-    int rotation; //todo implement for rotating boardgame
+    int rotation;
     static private boolean spin, rebound;
 
     public ClassicBoard(boolean properties, int n){
@@ -36,7 +41,7 @@ public class ClassicBoard implements GameBoard {
 
 
     // Creates an n by n grid
-    private static Tile[][] createClassicBoard(boolean properties, int n){
+    static Tile[][] createClassicBoard(boolean properties, int n){
         Tile[][] tiles = new Tile[n][n];
 
         // build tiles
@@ -83,6 +88,10 @@ public class ClassicBoard implements GameBoard {
     }
 
 
+    public void biconnect(int direction, ClassicBoard o){
+        this.neighbors[direction] = o;
+        o.neighbors[Tile.reverse(direction)] = this;
+    }
     @Override
     public StackPane asJavaFXNode() {
         StackPane stack = new StackPane();
@@ -225,14 +234,14 @@ public class ClassicBoard implements GameBoard {
                 int inARow = 1;
                 Tile neighbor = curr.getNeighbor(direction);
                 while (neighbor != null && neighbor.getOccupantId() == targetId){
-                    System.out.println("Woo! " + neighbor);
+                    //System.out.println("Woo! " + neighbor);
                     inARow++;
                     neighbor = neighbor.getNeighbor(direction);
                 }
                 int reverseDirection = Tile.reverse(direction);
                 neighbor = curr.getNeighbor(reverseDirection);
                 while (neighbor != null && neighbor.getOccupantId() == targetId){
-                    System.out.println("Woo! " + neighbor);
+                    //System.out.println("Woo! " + neighbor);
                     inARow++;
                     neighbor = neighbor.getNeighbor(reverseDirection);
                 }
@@ -290,9 +299,21 @@ public class ClassicBoard implements GameBoard {
             }
         }
     }
-    private boolean hasAvailableTiles() {
+    boolean hasAvailableTiles() {
         for (int i = 0; i < n; i++) for (int j = 0; j < n; j++)
                 if (tiles[i][j].isEmpty()) return true;
         return false;
+    }
+
+    ClassicBoard getNeighbor(int direction){
+       return neighbors[direction];
+    }
+
+    public void placeMarker(Marker m){
+        this.m = m;
+    }
+
+    public Marker getMarker(){
+        return this.m;
     }
 }

@@ -9,12 +9,14 @@ import java.util.List;
 
 public class GameConfig {
 
-    enum Config {PLAYERS, TIMEOUT, PLAYERS_INITIALIZED, PROPERTIES}
+    enum Config {PLAYERS, TIMEOUT, PLAYERS_INITIALIZED, PROPERTIES, ULTIMATE}
 
     private final int MIN_PLAYERS = 1;
     private final int MAX_PLAYERS = 2;
 
-    private boolean properties = false;
+    final int n = 3;
+    boolean properties = false;
+    boolean ultimate = false;
     private int numPlayers;
     private long timeoutSeconds;
     private final List<Player>[] teams;
@@ -53,6 +55,20 @@ public class GameConfig {
                     }
                     case "off": {
                         this.properties = false;
+                        break;
+                    }
+                }
+                return;
+            }
+
+            case ULTIMATE: {
+                switch (value){
+                    case "on": {
+                        this.ultimate = true;
+                        break;
+                    }
+                    case "off": {
+                        this.ultimate = false;
                         break;
                     }
                 }
