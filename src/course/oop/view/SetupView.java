@@ -6,10 +6,7 @@ import course.oop.model.Player;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.ColumnConstraints;
@@ -97,6 +94,14 @@ public class SetupView implements TTTView {
         HBox timeoutStuff = new HBox();
         timeoutStuff.getChildren().addAll(timeoutLabel, timeout);
 
+        // Tile Properties
+        CheckBox properties = new CheckBox("Tiles have special properties");
+        properties.setOnAction(e -> {
+            boolean selected = properties.isSelected();
+            if (selected){
+                Controller.execute("set properties on");
+            } else Controller.execute("set properties off");
+        });
 
         // Status
         this.status = new Label();
@@ -134,6 +139,7 @@ public class SetupView implements TTTView {
         root.add(addPlayerTeam2, 2, 0);
         root.add(team2Setups, 3, 0);
         root.add(timeoutStuff, 0, 1);
+        root.add(properties, 0, 2);
         root.add(status, 3, 1);
         root.add(mainmenu, 2, 2);
         root.add(start, 2, 1);

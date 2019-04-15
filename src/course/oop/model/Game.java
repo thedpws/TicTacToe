@@ -3,6 +3,7 @@ package course.oop.model;
 import course.oop.model.board.ClassicBoard;
 import course.oop.model.board.GameBoard;
 import course.oop.model.board.NullPlayer;
+import course.oop.model.board.Tile;
 import course.oop.util.Utilities;
 import javafx.scene.layout.StackPane;
 
@@ -21,7 +22,7 @@ public class Game {
 
     public Game(GameConfig config) {
         this.config = config;
-        this.board = new ClassicBoard(3);
+        this.board = new ClassicBoard(config.properties(), 3);
     }
 
     public boolean selectTile(String row, String col, int team, int[] players) {
@@ -35,7 +36,15 @@ public class Game {
         Player p = config.getPlayer(team, players[team]);
         Marker m = new Marker(team+1, p.getMarker());
 
-        return board.selectTile(rowInt, colInt, m);
+        Tile selected = board.selectTile(rowInt, colInt, m);
+        if (selected == null) return false;
+        else {
+            selected.triggerProperty(this);
+            return true;
+        }
+    }
+    public void clearEffects(){
+        board.clearEffects();
     }
 
     public String selectRandomTile() {
@@ -89,5 +98,15 @@ public class Game {
     public List<Player> getTeam(int team){
         return config.getTeam(team);
     }
+    public void spin(){
+        board.spin();
+    }
+    public void rebound(){
+        board.rebound();
+    }
+    public void clearBoard(){
+        board.clear();
+    }
 }
+
 

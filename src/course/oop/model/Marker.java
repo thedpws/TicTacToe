@@ -19,4 +19,8 @@ public class Marker {
         return this.marker;
     }
 
+    public static Marker BLOCKED = new Marker(-1, "blocked");
+    public static Marker CLOWN_TEAM1 = new Marker(0, "clown");
+    public static Marker CLOWN_TEAM2 = new Marker(1, "clown");
+
 }
