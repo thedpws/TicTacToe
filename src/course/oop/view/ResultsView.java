@@ -25,11 +25,8 @@ public class ResultsView extends TurnView {
         String winner = "problem";
         switch (winnerId) {
             case 1:
-                //winner = g.getPlayer(winnerId).toString();
-                winner = String.format("Team %d", winnerId);
-                break;
             case 2:
-                //winner = g.getPlayer(winnerId).toString();
+                winner = String.format("Team %d", winnerId);
                 break;
             case 3:
                 winner = "Nobody";

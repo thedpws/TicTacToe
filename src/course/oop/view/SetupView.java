@@ -49,9 +49,8 @@ public class SetupView implements TTTView {
 
         // Allow for adding players
         VBox team1Setups = new VBox();
-        root.add(team1Setups, 1, 0);
+
         VBox team2Setups = new VBox();
-        root.add(team2Setups, 2, 0);
         // team 1 initial player
         PlayerSetup initialSetup1 = new PlayerSetup();
         team1Setups.getChildren().add(initialSetup1.getMenu());
@@ -62,21 +61,17 @@ public class SetupView implements TTTView {
         team2.add(initialSetup2);
 
         Button addPlayerTeam2 = new Button("Add player Team 2");
-        root.add(addPlayerTeam2, 0, 5);
         addPlayerTeam2.setOnAction(e -> {
             PlayerSetup setup = new PlayerSetup();
             team2.add(setup);
             team2Setups.getChildren().add(setup.getMenu());
-            root.add(setup.getMenu(), team2.size(), 0);
         });
 
         Button addPlayerTeam1 = new Button("Add player Team 1");
-        root.add(addPlayerTeam1, 0, 6);
         addPlayerTeam1.setOnAction(e -> {
             PlayerSetup setup = new PlayerSetup();
             team1.add(setup);
             team1Setups.getChildren().add(setup.getMenu());
-            root.add(setup.getMenu(), team1.size(), 0);
         });
 
 
@@ -84,11 +79,9 @@ public class SetupView implements TTTView {
         Button start = new Button("Start game");
         start.setPrefWidth(100);
         start.setAlignment(Pos.CENTER_LEFT);
-        root.add(start, 2, 1);
 
         Button mainmenu = new Button("REturn to main menu");
         mainmenu.setOnAction(e -> Controller.execute("mainmenu"));
-        root.add(mainmenu, 2, 2);
 
 
 
@@ -103,17 +96,12 @@ public class SetupView implements TTTView {
         timeout.setPrefWidth(200);
         HBox timeoutStuff = new HBox();
         timeoutStuff.getChildren().addAll(timeoutLabel, timeout);
-        root.add(timeoutStuff, 0, 1);
 
 
         // Status
         this.status = new Label();
-        root.add(status, 3, 1);
 
 
-        root.getColumnConstraints().add(new ColumnConstraints(350));
-        root.getColumnConstraints().add(new ColumnConstraints(350));
-        root.getColumnConstraints().add(new ColumnConstraints(200));
         this.scene = new Scene(root, 800, 600);
 
         start.setOnAction(e -> {
@@ -137,42 +125,18 @@ public class SetupView implements TTTView {
             else updateMessages();
         });
 
-/*
-        start.setOnAction(e -> {
-            System.out.printf("Emoji1: %d. Emoji2 %d%n", emoji1, emoji2);
-            Controller.execute(String.format("set players %d", computer ? 1 : 2));
-            // write player 1
-            String username1 = usernameCombo1.getEditor().getText();
-            username1 = username1.replaceAll("(\\w*).*", "$1");
-            System.out.println(username1);
-            // TODO: Make a null player class
-            Player p1 = FileIO.loadPlayer(username1);
-            if (p1 == null) p1 = new Player(username1, emoji1);
-            p1.updateMarkerID(emoji1);
-            Controller.execute(String.format("createplayer %s %d %d", username1, emoji1, 1));
-            FileIO.writePlayer(p1);
-            System.out.println("SetupView.java: " + p1.asEntry());
-
-            // write player 2
-            if (!computer) {
-                String username2 = usernameCombo2.getEditor().getText();
-                username2 = username2.replaceAll("(\\w*).*", "$1");
-                System.out.println(username2);
-                Player p2 = FileIO.loadPlayer(username2);
-                if (p2 == null) p2 = new Player(username2, emoji2);
-                p2.updateMarkerID(emoji1);
-                Controller.execute(String.format("createplayer %s %d %d", username2, emoji2, 2));
-                FileIO.writePlayer(p2);
-                System.out.println("SetupView.java: " + p2.asEntry());
-            }
-
-            // set timeout
-            Controller.execute(String.format("set timeout %d", Integer.parseInt(timeout.getText())));
-
-
-            Controller.execute("start");
-        }
-            */
+        root.getColumnConstraints().add(new ColumnConstraints(100));
+        root.getColumnConstraints().add(new ColumnConstraints(350));
+        root.getColumnConstraints().add(new ColumnConstraints(100));
+        root.getColumnConstraints().add(new ColumnConstraints(350));
+        root.add(addPlayerTeam1, 0, 0);
+        root.add(team1Setups, 1, 0);
+        root.add(addPlayerTeam2, 2, 0);
+        root.add(team2Setups, 3, 0);
+        root.add(timeoutStuff, 0, 1);
+        root.add(status, 3, 1);
+        root.add(mainmenu, 2, 2);
+        root.add(start, 2, 1);
 
     }
 
@@ -253,7 +217,7 @@ class PlayerSetup {
             String username = usernameCombo.getEditor().getText();
             username = username.replaceFirst("(\\w*).*", "$1");
             Player p = FileIO.loadPlayer(username);
-            if (p != null) emoji = p.getMarkerID();
+            if (p.getMarkerID() != Player.DEFAULT_MARKER) emoji = p.getMarkerID();
             emojiImage.setImage(new Image(String.format("%d.png", emoji % SetupView.MAX_EMOJI)));
         });
 

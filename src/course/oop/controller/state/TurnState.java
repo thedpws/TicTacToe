@@ -74,12 +74,6 @@ public class TurnState implements GameState {
         return commands.get(cmd.toLowerCase()).execute(c);
     }
 
-    /*
-    private void printGameBoard() {
-        game.printGameBoard();
-    }
-    */
-
     private GameState getNextTurnState() {
         System.out.printf("Wow! Current player is player %d of team %d. Next is player %d of team %d\n", teamPlayer[team], team,  teamPlayer[(team+1) % 2], team + 1 % 2);
         // update team player

@@ -78,7 +78,7 @@ public class EndState implements GameState {
         };
         commands.put("print", PRINT);
          */
-        Command SETUP = c -> new GameSetupState(game.getConfig());
+        Command SETUP = c -> new GameSetupState();
         commands.put("setup", SETUP);
 
         for (Player p : FileIO.loadHashMap().values()) System.out.println(p.asEntry());

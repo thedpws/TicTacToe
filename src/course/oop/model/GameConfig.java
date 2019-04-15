@@ -29,21 +29,6 @@ public class GameConfig {
         configs[Config.TIMEOUT.ordinal()] = true;
     }
 
-    /*
-    public void printStatus() {
-        if (!configs[Config.PLAYERS.ordinal()])
-            System.out.println(Utilities.ANSI_RED + "Invalid number of players: " + numPlayers + Utilities.ANSI_RESET);
-        if (!configs[Config.TIMEOUT.ordinal()])
-            System.out.println(Utilities.ANSI_RED + "Invalid timeout value: " + timeoutSeconds + " seconds" + Utilities.ANSI_RESET);
-        if (!configs[Config.PLAYERS_INITIALIZED.ordinal()]) {
-            for (int i = 0; i < numPlayers; i++) {
-                if (players.get(i) == null)
-                    System.out.printf(Utilities.ANSI_RED + "Player #%d has not been created%n" + Utilities.ANSI_RESET, i + 1);
-            }
-        }
-    }
-     */
-
     public void setAttribute(String attribute, String value) {
         Config c;
         try {
@@ -64,31 +49,6 @@ public class GameConfig {
         }
     }
 
-    /*
-    private void updatePlayersInitialized() {
-        //update players_initialized
-        int config = Config.PLAYERS_INITIALIZED.ordinal();
-        configs[config] = true;
-        while (players.size() < numPlayers) players.add(null);
-        for (int i = 0; i < numPlayers; i++) {
-            configs[config] &= players.get(i) != null;
-        }
-    }
-     */
-
-
-    /*
-    private void setNumPlayers(int numPlayers) {
-        int config = Config.PLAYERS.ordinal();
-        this.numPlayers = numPlayers;
-        if (this.numPlayers < 0 || this.numPlayers > 2)
-            System.out.println(Utilities.ANSI_RED + "Invalid players: " + this.numPlayers + " must be 1 or 2" + Utilities.ANSI_RESET);
-
-        configs[config] = (MIN_PLAYERS <= this.numPlayers) && (this.numPlayers <= MAX_PLAYERS);
-    }
-
-
-     */
     private void setTimeout(int timeout) {
         int config = Config.TIMEOUT.ordinal();
         this.timeoutSeconds = timeout;

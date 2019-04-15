@@ -9,6 +9,12 @@ public class Player implements Serializable {
     private int marker;
     private int wins, losses; // todo implement for player records
 
+    public static final int DEFAULT_MARKER = 1;
+
+    public Player(String username){
+        this(username, DEFAULT_MARKER);
+    }
+
     public Player(String username, int marker) {
         this.username = username;
         this.marker = marker;
