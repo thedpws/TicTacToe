@@ -3,6 +3,7 @@ package course.oop.model.board;
 import course.oop.controller.Controller;
 import course.oop.model.Marker;
 import course.oop.util.Utilities;
+import javafx.animation.RotateTransition;
 import javafx.geometry.Pos;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -10,6 +11,8 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
+import javafx.scene.transform.Rotate;
+import javafx.util.Duration;
 
 import java.util.*;
 
@@ -123,6 +126,27 @@ public class ClassicBoard implements GameBoard {
         stack.getChildren().addAll(gridImage, board);
         //stack.getChildren().addAll(gridImage);
         stack.getChildren().forEach(c -> StackPane.setAlignment(c, Pos.CENTER));
+
+        double centerX = stack.getWidth()/2.0;
+        double centerY = stack.getHeight()/2.0;
+        System.out.println("stack x " + stack.getTranslateX());
+        System.out.println("stack y " + stack.getTranslateY());
+
+
+        //stack.getTransforms().add(new Rotate(-90*rotation, 312, 312));
+        //stack.getTransforms().add(new Rotate(-90*rotation, 354.5, 300));
+        RotateTransition rt = new RotateTransition();
+        int signe = rotation == 0 ? 1 : rotation / Math.abs(rotation);
+        if (rotation != 0){
+            rt.setByAngle(signe*Math.abs(rotation)*-90);
+        } else rt.setByAngle(0);
+        rt.setDuration(Duration.millis(1));
+        rt.setCycleCount(Math.abs(rotation) % 4);
+        rt.setNode(stack);
+        rt.play();
+        System.out.println("angle " + rt.getByAngle());
+
+        //stack.getTransforms().add(new Rotate(90, stack.getTranslateX()/2, stack.getTranslateY()/2.0));
         return stack;
     }
 
@@ -187,6 +211,20 @@ public class ClassicBoard implements GameBoard {
 
         // No winner and no tie.
         return 0;
+    }
+
+    @Override
+    public void rotate(String direction) {
+        switch (direction){
+            case "cw":{
+                this.rotation--;
+                break;
+            }
+            case "ccw":{
+                this.rotation++;
+                break;
+            }
+        }
     }
 
     private boolean hasAvailableTiles() {

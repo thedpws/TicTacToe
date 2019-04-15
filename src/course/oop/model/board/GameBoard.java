@@ -11,4 +11,5 @@ public interface GameBoard {
     boolean selectTile(int row, int col, Marker m);
     String selectRandomTile();
     int determineWinner();
+    void rotate(String direction);
 }
