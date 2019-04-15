@@ -13,6 +13,7 @@ public class Game {
 
     public static final int TIE = 3;
     public static final int NO_WINNER = 0;
+    private String status = "";
 
     // Config separates the configuration from the actual game itself.
     // This allows for multiple games to use the same static config (rematches)
@@ -39,7 +40,7 @@ public class Game {
         Tile selected = board.selectTile(rowInt, colInt, m);
         if (selected == null) return false;
         else {
-            selected.triggerProperty(this);
+            status = selected.triggerProperty(this);
             return true;
         }
     }
@@ -106,6 +107,9 @@ public class Game {
     }
     public void clearBoard(){
         board.clear();
+    }
+    public String getStatus(){
+        return status;
     }
 }
 

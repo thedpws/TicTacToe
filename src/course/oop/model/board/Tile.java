@@ -37,8 +37,7 @@ public class Tile {
             if (60 <= random && random < 70) tileProperty1 = new BlockProperty();
             if (70 <= random && random < 75) tileProperty1 = new ReboundProperty();
             if (75 <= random && random < 80) tileProperty1 = new ClearBoardProperty();
-            if (80 <= random && random < 85) tileProperty1 = new InvertTileProperty();
-            if (85 <= random && random < 100) tileProperty1 = new NoProperty();
+            if (80 <= random && random < 100) tileProperty1 = new NoProperty();
         }
         else tileProperty1 = new NoProperty();
         this.tileProperty = tileProperty1;
@@ -87,9 +86,10 @@ public class Tile {
         this.marker = null;
     }
 
-    public void triggerProperty(Game g){
-        this.tileProperty.applyEffect(g, this);
+    public String triggerProperty(Game g){
+        String s = this.tileProperty.applyEffect(g, this);
         this.tileProperty = new NoProperty();
+        return s;
     }
 
     // random double between 0 and 1

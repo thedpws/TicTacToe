@@ -4,58 +4,55 @@ import course.oop.model.Game;
 import course.oop.model.Marker;
 
 public interface TileProperty {
-    void applyEffect(Game g, Tile t);
+    String applyEffect(Game g, Tile t);
 }
 
 class NoProperty implements TileProperty {
     @Override
-    public void applyEffect (Game g, Tile t){
-        ;;
+    public String applyEffect (Game g, Tile t){
+        return "";
     }
 }
 
 class ClearBoardProperty implements TileProperty {
    @Override
-    public void applyEffect (Game g, Tile t) {
+    public String applyEffect (Game g, Tile t) {
        g.clearBoard();
+       return "Oops we lost your board! :)";
    }
 }
 
 class EraseProperty implements TileProperty {
     @Override
-    public void applyEffect (Game g, Tile t) {
+    public String applyEffect (Game g, Tile t) {
         t.clearMarker();
+        return "You failed to place a tile.";
     }
 }
 
 // Makes the game spin indefinitely
 class SpinProperty implements TileProperty {
     @Override
-    public void applyEffect (Game g, Tile t){
+    public String applyEffect (Game g, Tile t){
         g.spin();
+        return "Spin out";
     }
 }
 
 class ReboundProperty implements TileProperty {
     @Override
-    public void applyEffect(Game g, Tile t){
+    public String applyEffect(Game g, Tile t){
         g.rebound();
+        return "Whoooo";
     }
 }
 
 class BlockProperty implements TileProperty {
     @Override
-    public void applyEffect(Game g, Tile t){
+    public String applyEffect(Game g, Tile t){
+        t.clearMarker();
         t.placeMarker(Marker.BLOCKED);
+        return "Tile blocked!";
     }
 }
 
-class InvertTileProperty implements TileProperty {
-    @Override
-    public void applyEffect(Game g, Tile t){
-        t.clearMarker();
-        int otherTeam = (t.getOccupantId() + 1) % 2 ;
-        if (otherTeam == 0) t.placeMarker(Marker.CLOWN_TEAM1);
-        else if (otherTeam == 1) t.placeMarker(Marker.CLOWN_TEAM2);
-    }
-}
