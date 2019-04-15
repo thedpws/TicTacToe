@@ -55,6 +55,12 @@ public class TurnState implements GameState {
             return new EndState(game, winner);
         };
         commands.put("select", SELECT);
+        Command ROTATE = c -> {
+            String direction = c.getArgv()[1];
+            g.rotate(direction);
+            return new TurnState(this.game, this.team, this.teamPlayer);
+        };
+        commands.put("rotate", ROTATE);
     }
 
     @Override
@@ -65,8 +71,12 @@ public class TurnState implements GameState {
 
     @Override
     public GameState consumeCommand(CommandCall c) {
-        if (turnOver) return getNextTurnState();
+        if (turnOver) {
+            System.out.println("TURN OVER");
+            return getNextTurnState();
+        }
         if (game.getConfig().getTimeout() != 0 && !turnOver && LocalTime.now().isAfter(timeStarted.plusSeconds(game.getConfig().getTimeout()))) {
+            System.out.println("TURN OVER 2");
             return getNextTurnState();
         }
         String cmd = c.getArgv()[0];
