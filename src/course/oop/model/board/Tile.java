@@ -27,12 +27,10 @@ public class Tile {
 
     }
 
-    //@Override
     public int getOccupantId() {
         if (!isEmpty()) return marker.getTeamNumber(); else return -1;
     }
 
-    //@Override
     public boolean placeMarker(Marker m) {
         System.err.println("Placing Marker!!!!!!");
         if (!this.isEmpty()) {
@@ -44,29 +42,19 @@ public class Tile {
     }
 
 
-    //@Override
     public boolean hasAvailableTiles(){
         return isEmpty();
     }
 
 
 
-    //@Override
     public boolean isEmpty() {
         return marker == null;
     }
 
-    //@Override
     public void biconnect(int direction, Tile t){
         this.neighborhood[direction] = t;
         t.neighborhood[reverse(direction)] = this;
-    }
-
-    //@Override
-    public boolean isConnected(TileContainer t){
-        for (Tile neighbor : neighborhood)
-            if (neighbor == t) return true;
-        return false;
     }
 
     public Tile getNeighbor(int direction){
