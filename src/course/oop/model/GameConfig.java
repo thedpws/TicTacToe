@@ -16,22 +16,20 @@ public class GameConfig {
 
     private int numPlayers;
     private long timeoutSeconds;
-    private final List<Player> players;
+    private final List<Player>[] teams;
+    // mapping from playerId to player
+    private HashMap<Integer, Player> players = new HashMap<>();
     private final boolean[] configs;
 
     public GameConfig() {
-        players = new LinkedList<>();
+        teams = new LinkedList[2];
+        teams[0] = new LinkedList<>();
+        teams[1] = new LinkedList<>();
         configs = new boolean[Config.values().length];
         configs[Config.TIMEOUT.ordinal()] = true;
     }
 
-    public boolean isValid() {
-        boolean ready = true;
-        updatePlayersInitialized();
-        for (boolean b : configs) ready &= b;
-        return ready;
-    }
-
+    /*
     public void printStatus() {
         if (!configs[Config.PLAYERS.ordinal()])
             System.out.println(Utilities.ANSI_RED + "Invalid number of players: " + numPlayers + Utilities.ANSI_RESET);
@@ -44,6 +42,7 @@ public class GameConfig {
             }
         }
     }
+     */
 
     public void setAttribute(String attribute, String value) {
         Config c;
@@ -54,12 +53,6 @@ public class GameConfig {
             return;
         }
         switch (c) {
-            case PLAYERS: {
-                int numPlayers = Utilities.parseIntValue(value);
-                this.setNumPlayers(numPlayers);
-                return;
-            }
-
             case TIMEOUT: {
                 int timeout = Utilities.parseIntValue(value);
                 this.setTimeout(timeout);
@@ -71,6 +64,7 @@ public class GameConfig {
         }
     }
 
+    /*
     private void updatePlayersInitialized() {
         //update players_initialized
         int config = Config.PLAYERS_INITIALIZED.ordinal();
@@ -80,8 +74,10 @@ public class GameConfig {
             configs[config] &= players.get(i) != null;
         }
     }
+     */
 
 
+    /*
     private void setNumPlayers(int numPlayers) {
         int config = Config.PLAYERS.ordinal();
         this.numPlayers = numPlayers;
@@ -91,6 +87,8 @@ public class GameConfig {
         configs[config] = (MIN_PLAYERS <= this.numPlayers) && (this.numPlayers <= MAX_PLAYERS);
     }
 
+
+     */
     private void setTimeout(int timeout) {
         int config = Config.TIMEOUT.ordinal();
         this.timeoutSeconds = timeout;
@@ -99,7 +97,8 @@ public class GameConfig {
         configs[config] = (0 <= this.timeoutSeconds);
     }
 
-    public void createPlayer(String username, String marker, String number) {
+    // TODO Don't call until all players are valid
+    public void createPlayer(String username, String marker, String team) {
 
         int markerID = Integer.parseInt(marker);
         Player p = FileIO.loadPlayer(username);
@@ -110,43 +109,53 @@ public class GameConfig {
 
         System.out.println("GameConfig.java: " + p.asEntry());
 
-        int playerNumber = Utilities.parseIntValue(number);
-        /*
-        if (playerNumber == Integer.MIN_VALUE) return;
-        if (playerNumber < MIN_PLAYERS || playerNumber > MAX_PLAYERS) {
-            System.out.println(Utilities.ANSI_RED + "Invalid player number: " + number + " must be 1 or 2" + Utilities.ANSI_RESET);
-            return;
-        }
-        */
-        int playerIndex = playerNumber - 1;
-
-        //append to players to avoid index out of bounds
-        while (players.size() < playerNumber) players.add(null);
-        players.set(playerIndex, p);
+        int teamNumber = Utilities.parseIntValue(team);
+        List<Player> teamList = teams[teamNumber - 1];
+        teamList.add(p);
     }
 
     public int getNumPlayers() {
-        return numPlayers;
+        return players.size();
     }
 
-    public Player getPlayer(int index) {
+    public Player getPlayer(int team, int player) {
         System.out.println(players);
+        /*
         if (index < 0 || index >= players.size()) {
             return null;
         }
-        return players.get(index);
+         */
+        return teams[team].get(player);
     }
 
     public long getTimeout() {
         return this.timeoutSeconds;
     }
 
-    public void createComputer(String playerNumberString) {
-        int playerNumber = Utilities.parseIntValue(playerNumberString);
-        int playerIndex = playerNumber - 1;
+    public void createComputer(String team) {
+        int teamNumber = Utilities.parseIntValue(team);
+        List<Player> teamList = teams[teamNumber-1];
+        Computer c = new Computer();
+        teamList.add(c);
+    }
 
-        while (players.size() < playerNumber) players.add(null);
-        players.set(playerIndex, new Computer());
+    public int randomTeam(){
+        return (int) (Math.random() * (teams.length - 1));
+    }
+
+    public int randomPlayer(int teamNumber){
+       return (int) (Math.random() * (teams[teamNumber-1].size() - 1)) ;
+    }
+
+    public int[] updateTeam(int team, int[] teamPlayer){
+        teamPlayer[team] = (teamPlayer[team] + 1) % teams[team].size();
+        return teamPlayer;
+    }
+    public List<Player> getTeam(int team){
+        return teams[team];
+    }
+    public List<Player>[] getTeams(){
+        return teams;
     }
 
 }

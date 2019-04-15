@@ -6,6 +6,8 @@ import course.oop.model.board.NullPlayer;
 import course.oop.util.Utilities;
 import javafx.scene.layout.StackPane;
 
+import java.util.List;
+
 public class Game {
 
     public static final int TIE = 3;
@@ -22,7 +24,7 @@ public class Game {
         this.board = new ClassicBoard(3);
     }
 
-    public boolean selectTile(String row, String col, int playerNumber) {
+    public boolean selectTile(String row, String col, int team, int[] players) {
         // Parse int values
         int rowInt = Utilities.parseIntValue(row);
         if (rowInt == Integer.MIN_VALUE) return false;
@@ -30,9 +32,8 @@ public class Game {
         if (colInt == Integer.MIN_VALUE) return false;
 
         // get marker
-        int playerIndex = playerNumber - 1;
-        Player p = config.getPlayer(playerIndex);
-        Marker m = new Marker(playerNumber, p.getMarker());
+        Player p = config.getPlayer(team, players[team]);
+        Marker m = new Marker(team+1, p.getMarker());
 
         return board.selectTile(rowInt, colInt, m);
     }
@@ -62,14 +63,31 @@ public class Game {
         return board.asJavaFXNode();
     }
 
-    public Player getPlayer(int playerNumber) {
-        Player p = config.getPlayer(playerNumber - 1);
+    public Player getPlayer(int team, int player) {
+        Player p = config.getPlayer(team, player);
         if (p == null) return new NullPlayer();
         return p;
     }
 
     public GameConfig getConfig() {
         return this.config;
+    }
+
+    public int randomTeam(){
+       return config.randomTeam();
+    }
+
+    public int randomPlayer(int team){
+        return config.randomPlayer(team);
+    }
+    public List<Player> getPlayers(int team){
+        return config.getTeam(team);
+    }
+    public List<Player>[] getTeams(){
+        return config.getTeams();
+    }
+    public List<Player> getTeam(int team){
+        return config.getTeam(team);
     }
 }
 

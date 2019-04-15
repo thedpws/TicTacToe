@@ -3,16 +3,16 @@ package course.oop.model;
 public class Marker {
 
     private final String marker;
-    private final int playerNumber;
+    private final int teamNumber;
 
     //used only ingame. Purpose is to mark, not to store the marker.
-    Marker(int playerNumber, String marker) {
+    Marker(int teamNumber, String marker) {
         this.marker = marker;
-        this.playerNumber = playerNumber;
+        this.teamNumber = teamNumber;
     }
 
-    public int getPlayerNumber() {
-        return playerNumber;
+    public int getTeamNumber() {
+        return teamNumber;
     }
 
     public String getMark() {

@@ -28,14 +28,14 @@ public class TurnView implements TTTView {
     private final int n = 100;
 
     // TODO Break into functions
-    public TurnView(Game game, int player) {
+    public TurnView(Game game, int team, int[] player) {
         BorderPane root = new BorderPane();
         Parent center = game.getDisplay();
 
         root.setCenter(center);
 
         // If Computer, automate tile selection
-        Player p = game.getPlayer(player);
+        Player p = game.getPlayer(team, player[team]);
         if (p.isComputer()) {
             Timeline cpu = new Timeline(new KeyFrame(Duration.seconds(1.0), event -> {
             }));
@@ -63,7 +63,7 @@ public class TurnView implements TTTView {
         }
 
 
-        status = new Label(String.format("It's %s's turn!", game.getPlayer(player)));
+        status = new Label(String.format("It's %s's turn!", game.getPlayer(team, player[team])));
         bottom.add(status, 1, 0);
         bottom.setAlignment(Pos.TOP_CENTER);
         status.setFont(Font.font(20));

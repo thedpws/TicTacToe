@@ -18,17 +18,18 @@ public class ResultsView extends TurnView {
     public ResultsView(Game g) {
 
         // Inherit from TurnView
-        super(g, 0);
+        super(g, 0, new int[]{0});
 
         // Set winner message
         int winnerId = g.determineWinner();
         String winner = "problem";
         switch (winnerId) {
             case 1:
-                winner = g.getPlayer(winnerId).toString();
+                //winner = g.getPlayer(winnerId).toString();
+                winner = String.format("Team %d", winnerId);
                 break;
             case 2:
-                winner = g.getPlayer(winnerId).toString();
+                //winner = g.getPlayer(winnerId).toString();
                 break;
             case 3:
                 winner = "Nobody";

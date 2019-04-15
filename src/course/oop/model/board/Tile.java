@@ -29,7 +29,7 @@ public class Tile {
 
     //@Override
     public int getOccupantId() {
-        if (!isEmpty()) return marker.getPlayerNumber(); else return -1;
+        if (!isEmpty()) return marker.getTeamNumber(); else return -1;
     }
 
     //@Override

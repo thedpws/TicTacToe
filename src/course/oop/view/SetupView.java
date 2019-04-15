@@ -15,6 +15,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
 
 import java.util.*;
@@ -31,13 +32,12 @@ public class SetupView implements TTTView {
 
     final static int MAX_EMOJI = 39;
     static List<String> ENTRIES;
-    int players = 0;
     PriorityQueue<Integer> removedPlayerNumbers = new PriorityQueue<>();
-    LinkedList<PlayerSetup> playerSetups = new LinkedList<>();
+    LinkedList<PlayerSetup> team1 = new LinkedList<>();
+    LinkedList<PlayerSetup> team2 = new LinkedList<>();
 
     public SetupView() {
         GridPane root = new GridPane();
-        players = 2;
 
 
         GridPane player1menu = new GridPane();
@@ -48,34 +48,36 @@ public class SetupView implements TTTView {
         for (Player p : map.values()) ENTRIES.add(p.asEntry());
 
         // Allow for adding players
-        Button addPlayer = new Button("Add player");
-        addPlayer.setOnAction(e -> {
-            int playerNumber;
+        VBox team1Setups = new VBox();
+        root.add(team1Setups, 1, 0);
+        VBox team2Setups = new VBox();
+        root.add(team2Setups, 2, 0);
+        // team 1 initial player
+        PlayerSetup initialSetup1 = new PlayerSetup();
+        team1Setups.getChildren().add(initialSetup1.getMenu());
+        team1.add(initialSetup1);
+        // team 2 initial player
+        PlayerSetup initialSetup2 = new PlayerSetup();
+        team2Setups.getChildren().add(initialSetup2.getMenu());
+        team2.add(initialSetup2);
 
-            if (!removedPlayerNumbers.isEmpty()) {
-                // get new number from PQ
-                playerNumber = removedPlayerNumbers.poll();
-            } else {
-                playerNumber = players;
-            }
-
-            players++;
-            PlayerSetup setup = new PlayerSetup(playerNumber);
-            playerSetups.add(setup);
-            root.add(setup.getMenu(), playerNumber, 0);
+        Button addPlayerTeam2 = new Button("Add player Team 2");
+        root.add(addPlayerTeam2, 0, 5);
+        addPlayerTeam2.setOnAction(e -> {
+            PlayerSetup setup = new PlayerSetup();
+            team2.add(setup);
+            team2Setups.getChildren().add(setup.getMenu());
+            root.add(setup.getMenu(), team2.size(), 0);
         });
-        root.add(addPlayer, 0, 5);
 
-        players = 2;
-        // Player 1 menu
-        PlayerSetup s1 = new PlayerSetup(1);
-        playerSetups.add(s1);
-        root.add(s1.getMenu(), 0, 0);
-
-        // Player 2 menu
-        PlayerSetup s2 = new PlayerSetup(2);
-        playerSetups.add(s2);
-        root.add(s2.getMenu(), 1, 0);
+        Button addPlayerTeam1 = new Button("Add player Team 1");
+        root.add(addPlayerTeam1, 0, 6);
+        addPlayerTeam1.setOnAction(e -> {
+            PlayerSetup setup = new PlayerSetup();
+            team1.add(setup);
+            team1Setups.getChildren().add(setup.getMenu());
+            root.add(setup.getMenu(), team1.size(), 0);
+        });
 
 
         // Start Button
@@ -83,6 +85,10 @@ public class SetupView implements TTTView {
         start.setPrefWidth(100);
         start.setAlignment(Pos.CENTER_LEFT);
         root.add(start, 2, 1);
+
+        Button mainmenu = new Button("REturn to main menu");
+        mainmenu.setOnAction(e -> Controller.execute("mainmenu"));
+        root.add(mainmenu, 2, 2);
 
 
 
@@ -111,18 +117,22 @@ public class SetupView implements TTTView {
         this.scene = new Scene(root, 800, 600);
 
         start.setOnAction(e -> {
-            Controller.execute(String.format("set players %d", players));
+            //Controller.execute(String.format("set players %d", players));
             // Iterate through each player, adding them.
-            for (PlayerSetup setup : playerSetups)
+            for (PlayerSetup setup : team1)
                 try {
-                    setup.createPlayer();
+                    setup.createPlayer(1);
                 } catch (BadUsernameException ex) {
                     addError(ex.getMessage());
-                    //ex.printStackTrace();
+                }
+            for (PlayerSetup setup : team2)
+                try {
+                    setup.createPlayer(2);
+                } catch (BadUsernameException ex) {
+                    addError(ex.getMessage());
                 }
             // set timeout
             Controller.execute(String.format("set timeout %d", Integer.parseInt(timeout.getText())));;
-
             if (statusMessages.isEmpty()) Controller.execute("start");
             else updateMessages();
         });
@@ -202,24 +212,22 @@ class PlayerSetup {
     private int emoji = 0;
     private boolean computer;
     private final GridPane menu;
-    private final int n;
 
     private ComboBox usernameCombo;
 
 
-    PlayerSetup(int n){
-        this.n = n;
+    PlayerSetup(){
         this.menu = createMenu();
     }
 
-    void createPlayer() throws SetupView.BadUsernameException {
+    void createPlayer(int teamNumber) throws SetupView.BadUsernameException {
         if (computer) {
-            Controller.execute(String.format("createcomputer %d", n));
+            Controller.execute(String.format("createcomputer %d", teamNumber));
             return;
         } // else
         String username = getUsername();
-        if (username.equals("")) throw new SetupView.BadUsernameException(n);
-        Controller.execute(String.format("createplayer %s %d %d", username, emoji, n));
+        if (username.equals("")) throw new SetupView.BadUsernameException(teamNumber);
+        Controller.execute(String.format("createplayer %s %d %d", username, emoji, teamNumber));
     }
 
     private String getUsername(){
@@ -234,7 +242,7 @@ class PlayerSetup {
         GridPane menu = new GridPane();
 
         // Username box
-        Label usernameLabel = new Label(String.format("Player %d", this.n));
+        Label usernameLabel = new Label(String.format("hey"));
         this.usernameCombo = new ComboBox();
         usernameCombo.setEditable(true);
 

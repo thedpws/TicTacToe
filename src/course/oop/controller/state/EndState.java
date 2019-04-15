@@ -10,6 +10,7 @@ import course.oop.view.TTTView;
 import javafx.scene.Scene;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class EndState implements GameState {
@@ -28,16 +29,30 @@ public class EndState implements GameState {
         String result;
         if (endCode == Game.TIE) {
             result = "Tie. Everyone loses.";
-            for (int i = 1; i <= 2; i++) {
-                Player p = game.getPlayer(i);
+            for (List<Player> team : game.getTeams()) for (Player p : team){
                 p.addLoss();
                 if (p.isHuman()) FileIO.writePlayer(p);
-                System.out.println("EndState.java: " + p.asEntry());
             }
         } else {
-            int winner = endCode;
+            int winningTeam = endCode;
             //int winnerIndex = winner - 1;
-            result = String.format("Player %d wins! Congratulations %s!%n", winner, game.getPlayer(winner));
+            StringBuilder s = new StringBuilder("");
+            List<Player> winners = game.getTeam(winningTeam-1);
+            s.append("Congratulations to ").append(winners.get(0));
+            for (int i = 1; i < winners.size(); i++){
+                s.append(", ").append(winners.get(i));
+            }
+            for (Player winner : winners) {
+                winner.addWin();
+                if (winner.isHuman()) FileIO.writePlayer(winner);
+            }
+            List<Player> losers = game.getTeam(winningTeam % 2);
+            for (Player loser : losers) {
+                loser.addLoss();
+                if (loser.isHuman()) FileIO.writePlayer(loser);
+            }
+            result = s.toString();
+            /*
             for (int i = 1; i <= game.getConfig().getNumPlayers(); i++) {
                 Player p = game.getPlayer(i);
                 if (winner == i) p.addWin();
@@ -45,6 +60,7 @@ public class EndState implements GameState {
                 if (p.isHuman()) FileIO.writePlayer(p);
                 System.out.println("EndState.java: " + p.asEntry());
             }
+            */
         }
 
         //game.printGameBoard();
@@ -93,7 +109,7 @@ public class EndState implements GameState {
         } else {
             int winner = endCode;
             int winnerIndex = winner - 1;
-            result = String.format("Player %d wins! Congratulations %s!%n", winner, game.getPlayer(winner));
+            //result = String.format("Player %d wins! Congratulations %s!%n", winner, game.getPlayer(winner));
         }
 
         //game.printGameBoard();

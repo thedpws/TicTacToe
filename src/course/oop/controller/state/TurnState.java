@@ -16,20 +16,28 @@ public class TurnState implements GameState {
 
     private final Map<String, Command> commands;
 
-    private final int player;
     private final Game game;
     private final LocalTime timeStarted;
     private boolean turnOver;
     private final TurnView view;
 
+    private final int team;
+    private final int[] teamPlayer;
+
+    // pass in information about which team's turn it is and which index of player
     public TurnState(Game g) {
-        this(g, (int) Math.round(Math.random()) + 1);
+        this(g, -1, new int[]{0,0});
     }
 
-    private TurnState(Game g, int player) {
-        this.player = player;
+    // Zero-index
+    private TurnState(Game g, int team, int[] teamPlayer) {
+        if (team == -1) {
+            team = g.randomTeam();
+        }
+        this.team = team;
+        this.teamPlayer = teamPlayer;
         this.game = g;
-        this.view = new TurnView(game, player);
+        this.view = new TurnView(game, team, teamPlayer);
         timeStarted = LocalTime.now();
 
         printInitialText();
@@ -39,7 +47,7 @@ public class TurnState implements GameState {
         Command SELECT = c -> {
             String row = c.getArgv()[1];
             String column = c.getArgv()[2];
-            if (!game.selectTile(row, column, player)) return TurnState.this;
+            if (!game.selectTile(row, column, this.team, teamPlayer)) return TurnState.this;
 
             int winner = game.determineWinner();
 
@@ -52,7 +60,7 @@ public class TurnState implements GameState {
     @Override
     public void printInitialText() {
         //printGameBoard();
-        System.out.printf("It's %s's turn!%n", game.getPlayer(player));
+        System.out.printf("It's %s's turn!%n", game.getPlayer(team, teamPlayer[team]));
     }
 
     @Override
@@ -73,13 +81,15 @@ public class TurnState implements GameState {
     */
 
     private GameState getNextTurnState() {
-        System.out.printf("Wow! Current player is %d. Next is %d\n", player, player % 2 + 1);
-        return new TurnState(game, (player) % 2 + 1);
+        System.out.printf("Wow! Current player is player %d of team %d. Next is player %d of team %d\n", teamPlayer[team], team,  teamPlayer[(team+1) % 2], team + 1 % 2);
+        // update team player
+        //teamPlayer = game.getConfig().updateTeam(team, teamPlayer);
+        return new TurnState(game, (team+1)%2, game.getConfig().updateTeam(team, teamPlayer));
     }
 
     @Override
     public String getPrompt() {
-        Player p = game.getConfig().getPlayer(player - 1);
+        Player p = game.getConfig().getPlayer(team, teamPlayer[team]);
         return String.format("%s %s", p, p.getMarker());
     }
 

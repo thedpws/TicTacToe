@@ -35,10 +35,12 @@ public class GameSetupState implements GameState {
         // set
         this.commands.put("set", SET);
         Command START = c -> {
+            /*
             if (!gameConfig.isValid()) {
                 gameConfig.printStatus();
                 return GameSetupState.this;
             }
+            */
             return new GameInitState(gameConfig);
         };
         // start
@@ -46,20 +48,22 @@ public class GameSetupState implements GameState {
         Command CREATE_PLAYER = c -> {
             String username = c.getArgv()[1];
             String marker = c.getArgv()[2];
-            String number = c.getArgv()[3];
-            gameConfig.createPlayer(username, marker, number);
+            String team = c.getArgv()[3];
+            gameConfig.createPlayer(username, marker, team);
             return GameSetupState.this;
         };
-        // createplayer
+        // createplayer [username] [marker] [teamNumber]
         this.commands.put("createplayer", CREATE_PLAYER);
-        // createcomputer [playerNumber]
+        // createcomputer [teamNumber]
         Command CREATE_COMPUTER = c -> {
-            String number = c.getArgv()[1];
-            gameConfig.createComputer(number);
+            String team = c.getArgv()[1];
+            gameConfig.createComputer(team);
             return GameSetupState.this;
         };
-        // createcomputer
+        // createcomputer [team]
         this.commands.put("createcomputer", CREATE_COMPUTER);
+        Command MAIN_MENU = c -> new InitialState();
+        this.commands.put("mainmenu", MAIN_MENU);
     }
 
     @Override
