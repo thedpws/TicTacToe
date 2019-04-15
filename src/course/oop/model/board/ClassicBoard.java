@@ -3,7 +3,10 @@ package course.oop.model.board;
 import course.oop.controller.Controller;
 import course.oop.model.Marker;
 import course.oop.util.Utilities;
+import javafx.animation.Animation;
 import javafx.animation.RotateTransition;
+import javafx.animation.Transition;
+import javafx.animation.TranslateTransition;
 import javafx.geometry.Pos;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -19,23 +22,26 @@ import java.util.*;
 import static java.lang.System.exit;
 
 public class ClassicBoard implements GameBoard {
+    private static double x = 400;
+    private static double y = 300;
     Tile[][] tiles;
     int n;
     int rotation; //todo implement for rotating boardgame
+    static private boolean spin, rebound;
 
-    public ClassicBoard(int n){
+    public ClassicBoard(boolean properties, int n){
         this.n = n;
-        this.tiles = createClassicBoard(n);
+        this.tiles = createClassicBoard(properties, n);
     }
 
 
     // Creates an n by n grid
-    private static Tile[][] createClassicBoard(int n){
+    private static Tile[][] createClassicBoard(boolean properties, int n){
         Tile[][] tiles = new Tile[n][n];
 
         // build tiles
         for (int row = 0; row < n; row++) for (int col = 0; col < n; col++){
-            tiles[row][col] = new Tile();
+            tiles[row][col] = new Tile(properties);
         }
 
         // build connections
@@ -127,6 +133,36 @@ public class ClassicBoard implements GameBoard {
         //stack.getChildren().addAll(gridImage);
         stack.getChildren().forEach(c -> StackPane.setAlignment(c, Pos.CENTER));
 
+        if (spin){
+            RotateTransition rt = new RotateTransition();
+            rt.setDuration(Duration.seconds(1));
+            rt.setByAngle(360);
+            rt.setCycleCount(Animation.INDEFINITE);
+            rt.setNode(stack);
+            rt.play();
+        }
+
+        if (rebound){
+            TranslateTransition tt = new TranslateTransition();
+            tt.setDuration(Duration.seconds(1));
+            tt.setFromX(ClassicBoard.x);
+            tt.setFromY(ClassicBoard.y);
+            tt.setToX(Math.random()*800 - 400);
+            tt.setToY(Math.random()*600 - 300);
+            tt.setCycleCount(1);
+            tt.setNode(stack);
+            tt.setOnFinished(e -> {
+                ClassicBoard.x = tt.getToX();
+                ClassicBoard.y = tt.getToY();
+                tt.setFromX(ClassicBoard.x);
+                tt.setFromY(ClassicBoard.y);
+                tt.setToX(Math.random()*800 - 400);
+                tt.setToY(Math.random()*600 - 300);
+                tt.play();
+            });
+            tt.play();
+        }
+
         double centerX = stack.getWidth()/2.0;
         double centerY = stack.getHeight()/2.0;
         System.out.println("stack x " + stack.getTranslateX());
@@ -146,16 +182,15 @@ public class ClassicBoard implements GameBoard {
         rt.play();
         System.out.println("angle " + rt.getByAngle());
 
-        //stack.getTransforms().add(new Rotate(90, stack.getTranslateX()/2, stack.getTranslateY()/2.0));
         return stack;
     }
 
     @Override
-    public boolean selectTile(int row, int col, Marker m) {
+    public Tile selectTile(int row, int col, Marker m) {
         if (0 <= row && 0 <= col && row < n && col < n)
             return tiles[row][col].placeMarker(m);
         System.out.println(Utilities.ANSI_RED + "Bad tile: " + row + " " + col + Utilities.ANSI_RESET);
-        return false;
+        return null;
     }
 
     @Override
@@ -214,6 +249,35 @@ public class ClassicBoard implements GameBoard {
     }
 
     @Override
+    public Tile getTile(int row, int col) {
+        return tiles[row][col];
+    }
+
+    @Override
+    public void spin() {
+        spin = true;
+    }
+
+    @Override
+    public void rebound() {
+        rebound = true;
+    }
+
+    @Override
+    public void clear() {
+        for (int i = 0; i < n; i++) for (int j = 0; j < n; j++){
+            tiles[i][j].clearMarker();
+        }
+    }
+
+    @Override
+    public void clearEffects() {
+        spin = false;
+        rebound = false;
+        y = 300;
+        x = 400;
+    }
+    @Override
     public void rotate(String direction) {
         switch (direction){
             case "cw":{
@@ -226,7 +290,6 @@ public class ClassicBoard implements GameBoard {
             }
         }
     }
-
     private boolean hasAvailableTiles() {
         for (int i = 0; i < n; i++) for (int j = 0; j < n; j++)
                 if (tiles[i][j].isEmpty()) return true;

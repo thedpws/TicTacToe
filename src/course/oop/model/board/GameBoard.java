@@ -8,8 +8,13 @@ import javafx.scene.layout.StackPane;
 public interface GameBoard {
     StackPane asJavaFXNode();
 
-    boolean selectTile(int row, int col, Marker m);
+    Tile selectTile(int row, int col, Marker m);
     String selectRandomTile();
     int determineWinner();
+    Tile getTile(int row, int col);
+    void spin();
+    void rebound();
+    void clear();
+    void clearEffects();
     void rotate(String direction);
 }

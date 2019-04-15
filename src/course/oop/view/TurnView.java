@@ -32,8 +32,11 @@ public class TurnView implements TTTView {
 
     // TODO Break into functions
     public TurnView(Game game, int team, int[] player) {
+
         BorderPane root = new BorderPane();
         Parent center = game.getDisplay();
+        Label effect = new Label(game.getStatus());
+        root.setTop(effect);
 
         root.setCenter(center);
 

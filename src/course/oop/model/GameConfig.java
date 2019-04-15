@@ -9,11 +9,12 @@ import java.util.List;
 
 public class GameConfig {
 
-    enum Config {PLAYERS, TIMEOUT, PLAYERS_INITIALIZED}
+    enum Config {PLAYERS, TIMEOUT, PLAYERS_INITIALIZED, PROPERTIES}
 
     private final int MIN_PLAYERS = 1;
     private final int MAX_PLAYERS = 2;
 
+    private boolean properties = false;
     private int numPlayers;
     private long timeoutSeconds;
     private final List<Player>[] teams;
@@ -44,9 +45,27 @@ public class GameConfig {
                 return;
             }
 
+            case PROPERTIES: {
+                switch (value){
+                    case "on": {
+                        this.properties = true;
+                        break;
+                    }
+                    case "off": {
+                        this.properties = false;
+                        break;
+                    }
+                }
+                return;
+            }
+
             default: {
             }
         }
+    }
+
+    boolean properties(){
+       return properties;
     }
 
     private void setTimeout(int timeout) {

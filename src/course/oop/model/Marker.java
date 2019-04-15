@@ -19,4 +19,6 @@ public class Marker {
         return this.marker;
     }
 
+    public static Marker BLOCKED = new Marker(-1, "clown");
+
 }

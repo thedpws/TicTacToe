@@ -67,7 +67,10 @@ public class EndState implements GameState {
         System.out.println(result);
 
         this.commands = new HashMap<>();
-        Command REMATCH = c -> new GameInitState(game.getConfig());
+        Command REMATCH = c -> {
+            game.clearEffects();
+            return new GameInitState(game.getConfig());
+        };
         commands.put("rematch", REMATCH);
         Command MAIN_MENU = c -> new InitialState();
         commands.put("mainmenu", MAIN_MENU);
