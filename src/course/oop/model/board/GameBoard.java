@@ -15,6 +15,6 @@ public interface GameBoard {
     void spin();
     void rebound();
     void clear();
-
     void clearEffects();
+    void rotate(String direction);
 }

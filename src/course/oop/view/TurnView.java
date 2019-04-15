@@ -4,18 +4,21 @@ import course.oop.controller.Controller;
 import course.oop.model.Game;
 import course.oop.model.Player;
 import javafx.animation.KeyFrame;
+import javafx.animation.RotateTransition;
 import javafx.animation.Timeline;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
+import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
 public class TurnView implements TTTView {
@@ -65,6 +68,13 @@ public class TurnView implements TTTView {
             timer.play();
         }
 
+        System.out.println(center.getRotationAxis());
+        Button rotateCCW = new Button("Rotate");
+        rotateCCW.setOnMouseClicked(e -> Controller.execute("rotate ccw"));
+        Button rotateCW = new Button("Rotate");
+        rotateCW.setOnMouseClicked(e -> Controller.execute("rotate cw"));
+        root.setLeft(rotateCW);
+        root.setRight(rotateCCW);
 
         status = new Label(String.format("It's %s's turn!", game.getPlayer(team, player[team])));
         bottom.add(status, 1, 0);

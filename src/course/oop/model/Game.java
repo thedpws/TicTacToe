@@ -1,5 +1,6 @@
 package course.oop.model;
 
+import course.oop.controller.state.GameState;
 import course.oop.model.board.ClassicBoard;
 import course.oop.model.board.GameBoard;
 import course.oop.model.board.NullPlayer;
@@ -110,6 +111,9 @@ public class Game {
     }
     public String getStatus(){
         return status;
+    }
+      public void rotate(String direction) {
+       board.rotate(direction);
     }
 }
 

@@ -14,6 +14,7 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
+import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
 import java.util.*;
@@ -162,6 +163,25 @@ public class ClassicBoard implements GameBoard {
             tt.play();
         }
 
+        double centerX = stack.getWidth()/2.0;
+        double centerY = stack.getHeight()/2.0;
+        System.out.println("stack x " + stack.getTranslateX());
+        System.out.println("stack y " + stack.getTranslateY());
+
+
+        //stack.getTransforms().add(new Rotate(-90*rotation, 312, 312));
+        //stack.getTransforms().add(new Rotate(-90*rotation, 354.5, 300));
+        RotateTransition rt = new RotateTransition();
+        int signe = rotation == 0 ? 1 : rotation / Math.abs(rotation);
+        if (rotation != 0){
+            rt.setByAngle(signe*Math.abs(rotation)*-90);
+        } else rt.setByAngle(0);
+        rt.setDuration(Duration.millis(1));
+        rt.setCycleCount(Math.abs(rotation) % 4);
+        rt.setNode(stack);
+        rt.play();
+        System.out.println("angle " + rt.getByAngle());
+
         return stack;
     }
 
@@ -257,7 +277,19 @@ public class ClassicBoard implements GameBoard {
         y = 300;
         x = 400;
     }
-
+    @Override
+    public void rotate(String direction) {
+        switch (direction){
+            case "cw":{
+                this.rotation--;
+                break;
+            }
+            case "ccw":{
+                this.rotation++;
+                break;
+            }
+        }
+    }
     private boolean hasAvailableTiles() {
         for (int i = 0; i < n; i++) for (int j = 0; j < n; j++)
                 if (tiles[i][j].isEmpty()) return true;
