@@ -321,7 +321,6 @@ public class ThreeDimensionalBoard implements GameBoard {
                 int x = n - yz -1;
                 if (!selections[x][yz][yz]) winXYZs = false;
             }
-            if (winXYZs) return team;
 
             //System.out.println("11");
             winXYZs = true;

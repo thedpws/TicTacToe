@@ -7,6 +7,9 @@ import javafx.animation.RotateTransition;
 import javafx.animation.TranslateTransition;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.effect.ColorAdjust;
+import javafx.scene.effect.GaussianBlur;
+import javafx.scene.effect.Glow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.ColumnConstraints;
@@ -15,6 +18,7 @@ import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -137,13 +141,18 @@ public class UltimateBoard implements GameBoard{
                 //substack.getChildren().addAll(gridImage, subBoard);
                 substack.getChildren().addAll(gridImage, subBoard);
                 substack.getChildren().forEach(c -> StackPane.setAlignment(c, Pos.CENTER));
+                if (this.nextSubBoard != null && this.nextSubBoard != sub) substack.setEffect(new ColorAdjust(0.0, 0, -0.2, 0.0));
             } else {
                 // Is single emoji.
                 String emojiID = sub.getMarker().getMark();
+                ImageView tttBoard =  new ImageView(new Image("ttt.jpg"));
                 ImageView emoji = new ImageView(new Image(emojiID + ".png"));
+
+                tttBoard.setFitHeight(subBoardSide*n - 5);
+                tttBoard.setFitWidth(subBoardSide*n - 5);
                 emoji.setFitHeight(subBoardSide*n - 5);
                 emoji.setFitWidth(subBoardSide*n - 5);
-                substack.getChildren().add(emoji);
+                substack.getChildren().addAll(tttBoard, emoji);
             }
             board.add(substack, col, row);
         }
