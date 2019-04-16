@@ -195,7 +195,9 @@ public class ClassicBoard implements GameBoard {
     }
 
     @Override
-    public Tile selectTile(int row, int col, Marker m) {
+    public Tile selectTile(int[] coords, Marker m) {
+        int row = coords[0];
+        int col = coords[1];
         if (0 <= row && 0 <= col && row < n && col < n)
             return tiles[row][col].placeMarker(m);
         System.out.println(Utilities.ANSI_RED + "Bad tile: " + row + " " + col + Utilities.ANSI_RESET);
@@ -249,6 +251,7 @@ public class ClassicBoard implements GameBoard {
             }
             // N in a row!
         }
+        // TODO: Check other diagonal for even N
 
         // Check to see if Tie
         if (!hasAvailableTiles()) return 3;
@@ -258,8 +261,8 @@ public class ClassicBoard implements GameBoard {
     }
 
     @Override
-    public Tile getTile(int row, int col) {
-        return tiles[row][col];
+    public Tile getTile(int[] coords) {
+        return tiles[coords[0]][coords[1]];
     }
 
     @Override

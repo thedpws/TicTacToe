@@ -109,7 +109,7 @@ public class UltimateBoard implements GameBoard{
                 GridPane subBoard = new GridPane();
                 for (int rrow = 0; rrow < n; rrow++)
                     for (int ccol = 0; ccol < n; ccol++) {
-                        Tile t = sub.getTile(rrow, ccol);
+                        Tile t = sub.getTile(new int[]{rrow, ccol});
                         ImageView emoji;
                         String emojiID = t.getMark();
                         if (emojiID.equals("")) emojiID = "blank";
@@ -193,18 +193,18 @@ public class UltimateBoard implements GameBoard{
     }
 
     @Override
-    public Tile selectTile(int row, int col, Marker m) {
+    public Tile selectTile(int[] coords, Marker m) {
         //if (! (0 <= row && row <= 3*n && 0 <= col && col <= 3*n)) return null;
-        ClassicBoard subBoard = subBoards[getBoard(row)][getBoard(col)];
+        ClassicBoard subBoard = subBoards[getBoard(coords[0])][getBoard(coords[1])];
         if (nextSubBoard != subBoard && nextSubBoard != null){
             System.err.println("Wrong subboard");
             return null;
         }
 
-        nextSubBoard = subBoards[getRelatedBoard(row)][getRelatedBoard(col)];
-        row = row % n;
-        col = col % n;
-        Tile selected = subBoard.getTile(row, col);
+        nextSubBoard = subBoards[getRelatedBoard(coords[0])][getRelatedBoard(coords[1])];
+        coords[0] = coords[0] % n;
+        coords[1] = coords[1] % n;
+        Tile selected = subBoard.getTile(coords);
         if (!selected.isEmpty()) return null;
         selected.placeMarker(m);
         if (subBoard.determineWinner() == 1 || subBoard.determineWinner() == 2){
@@ -225,7 +225,7 @@ public class UltimateBoard implements GameBoard{
                 ClassicBoard curr = subBoards[i][j];
                 if (curr.determineWinner() != 0) continue;
                 for (int ii = 0; ii < n; ii++) for (int jj = 0; jj < n; jj++) {
-                    if (curr.getTile(ii,jj).isEmpty())
+                    if (curr.getTile(new int[]{ii,jj}).isEmpty())
                         available.add(new Integer[]{ii + i*n, jj + j*n});
                 }
             }
@@ -247,7 +247,7 @@ public class UltimateBoard implements GameBoard{
         List<Integer[]> available = new ArrayList<>();
 
         for (int i = 0; i < n; i++) for (int j = 0; j < n; j++) {
-            if (restriction.getTile(i, j).isEmpty())
+            if (restriction.getTile(new int[]{i, j}).isEmpty())
                 available.add(new Integer[]{i + nextSubBoardRow * n, j + nextSubBoardCol * n});
         }
         int randomIndex = (int) Math.round(Math.random() * (available.size()-1));
@@ -308,11 +308,11 @@ public class UltimateBoard implements GameBoard{
     }
 
     @Override
-    public Tile getTile(int row, int col) {
-        ClassicBoard sub = subBoards[row/n][col/n];
-        row = row % n;
-        col = col % n;
-        return sub.getTile(row, col);
+    public Tile getTile(int[] coords) {
+        ClassicBoard sub = subBoards[coords[0]/n][coords[1]/n];
+        coords[0] = coords[0] % n;
+        coords[1] = coords[1] % n;
+        return sub.getTile(new int[]{coords[0], coords[1]});
     }
 
     @Override

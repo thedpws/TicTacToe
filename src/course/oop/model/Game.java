@@ -22,21 +22,23 @@ public class Game {
     public Game(GameConfig config) {
         this.config = config;
         if (this.config.ultimate) this.board = new UltimateBoard(config.properties(), config.n);
+        else if (this.config.three_dimensional) this.board = new ThreeDimensionalBoard(config.properties(), config.n);
         else this.board = new ClassicBoard(config.properties(), config.n);
     }
 
-    public boolean selectTile(String row, String col, int team, int[] players) {
+    public boolean selectTile(String[] coords, int team, int[] players) {
         // Parse int values
-        int rowInt = Utilities.parseIntValue(row);
-        if (rowInt == Integer.MIN_VALUE) return false;
-        int colInt = Utilities.parseIntValue(col);
-        if (colInt == Integer.MIN_VALUE) return false;
+        int rowInt = Utilities.parseIntValue(coords[0]);
+        int colInt = Utilities.parseIntValue(coords[1]);
+        int zInt = 0;
+        if (coords.length == 3) zInt = Utilities.parseIntValue(coords[2]);
+        int[] coordsInts = {rowInt, colInt, zInt};
 
         // get marker
         Player p = config.getPlayer(team, players[team]);
         Marker m = new Marker(team+1, p.getMarker());
 
-        Tile selected = board.selectTile(rowInt, colInt, m);
+        Tile selected = board.selectTile(coordsInts, m);
         if (selected == null) return false;
         else {
             status = selected.triggerProperty(this);

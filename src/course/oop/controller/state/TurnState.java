@@ -47,7 +47,11 @@ public class TurnState implements GameState {
         Command SELECT = c -> {
             String row = c.getArgv()[1];
             String column = c.getArgv()[2];
-            if (!game.selectTile(row, column, this.team, teamPlayer)) return TurnState.this;
+            String z = "0";
+            //assert false;
+            if (c.getArgv().length == 4) z = c.getArgv()[3];
+            String[] coords = {row, column, z};
+            if (!game.selectTile(coords, this.team, teamPlayer)) return TurnState.this;
 
             int winner = game.determineWinner();
 

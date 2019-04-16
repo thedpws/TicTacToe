@@ -103,13 +103,18 @@ public class SetupView implements TTTView {
             } else Controller.execute("set properties off");
         });
 
-        // Ultimate TTTT
+        // Ultimate TTT
         CheckBox ultimate = new CheckBox("Ultimate Tic-Tac-Toe");
         ultimate.setOnAction(e -> {
             if (ultimate.isSelected()) Controller.execute("set ultimate on");
             else Controller.execute("set ultimate off");
         });
-
+        //3d TTT
+        CheckBox threedim = new CheckBox("3D Tic-Tac-Toe");
+        threedim.setOnAction(e -> {
+            if (threedim.isSelected()) Controller.execute("set three_dimensional on");
+            else Controller.execute("set three_dimensional off");
+        });
         // Status
         this.status = new Label();
 
@@ -148,6 +153,7 @@ public class SetupView implements TTTView {
         root.add(timeoutStuff, 0, 1);
         root.add(properties, 0, 2);
         root.add(ultimate, 0, 3);
+        root.add(threedim, 0, 4);
         root.add(status, 3, 1);
         root.add(mainmenu, 2, 2);
         root.add(start, 2, 1);
