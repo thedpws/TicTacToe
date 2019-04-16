@@ -9,7 +9,7 @@ import java.util.List;
 
 public class GameConfig {
 
-    enum Config {PLAYERS, TIMEOUT, PLAYERS_INITIALIZED, PROPERTIES, ULTIMATE}
+    enum Config {PLAYERS, TIMEOUT, PLAYERS_INITIALIZED, PROPERTIES, ULTIMATE, THREE_DIMENSIONAL}
 
     private final int MIN_PLAYERS = 1;
     private final int MAX_PLAYERS = 2;
@@ -17,6 +17,7 @@ public class GameConfig {
     final int n = 3;
     boolean properties = false;
     boolean ultimate = false;
+    boolean three_dimensional = false;
     private int numPlayers;
     private long timeoutSeconds;
     private final List<Player>[] teams;
@@ -61,6 +62,19 @@ public class GameConfig {
                 return;
             }
 
+            case THREE_DIMENSIONAL: {
+                switch (value){
+                    case "on": {
+                        this.three_dimensional = true;
+                        break;
+                    }
+                    case "off": {
+                        this.three_dimensional = false;
+                        break;
+                    }
+                }
+                return;
+            }
             case ULTIMATE: {
                 switch (value){
                     case "on": {
