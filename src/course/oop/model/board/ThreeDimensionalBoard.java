@@ -2,7 +2,9 @@ package course.oop.model.board;
 
 import course.oop.controller.Controller;
 import course.oop.model.Marker;
+import javafx.animation.Animation;
 import javafx.animation.RotateTransition;
+import javafx.animation.TranslateTransition;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.SubScene;
@@ -10,6 +12,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.transform.Rotate;
+import javafx.scene.transform.Translate;
 import javafx.util.Duration;
 
 import java.util.*;
@@ -21,10 +24,13 @@ public class ThreeDimensionalBoard implements GameBoard {
     // 3rd index is all values from 0 to 8
     // 3 in a row looks like any ints = 3 in X Y or Z, or 3 nonzeroes in a row
     private static final int TEAM1=0, TEAM2=1, BLOCKED=2, X=0, Y=1, Z=2;
+    double x = 400, y=300;
     //List<Point>[] selections;
     boolean[][][][] selections;
     ClassicBoard[] boards;
     final int n;
+    boolean spin, rebound;
+    int rotations;
 
     public ThreeDimensionalBoard(boolean properties, int n){
         selections = new boolean[3][n][n][n];
@@ -115,19 +121,55 @@ public class ThreeDimensionalBoard implements GameBoard {
                 board.add(emoji, col, row);
             }
             // Make 3D
+            Rotate r = new Rotate(45, Rotate.X_AXIS);
+
+            /*
             RotateTransition rt = new RotateTransition(Duration.ONE, substack);
             rt.setAxis(Rotate.X_AXIS);
             rt.setByAngle(45);
+            rt.play();
+            */
+            substack.getTransforms().add(r);
             substack.getChildren().forEach(child -> StackPane.setAlignment(child, Pos.CENTER));
             boards.getChildren().add(substack);
-            rt.play();
+            // spin
+            if (spin){
+                RotateTransition spin = new RotateTransition();
+                spin.setByAngle(360);
+                spin.setDuration(Duration.seconds(1));
+                spin.setCycleCount(Animation.INDEFINITE);
+                spin.setNode(substack);
+                spin.play();
+            }
         }
-        return new StackPane(boards);
+        StackPane stack = new StackPane(boards);
+        if (rebound){
+            TranslateTransition tt = new TranslateTransition();
+            tt.setDuration(Duration.seconds(1));
+            tt.setFromX(this.x);
+            tt.setFromY(this.y);
+            tt.setToX(Math.random()*800 - 400);
+            tt.setToY(Math.random()*600 - 300);
+            tt.setCycleCount(1);
+            tt.setNode(stack);
+            tt.setOnFinished(e -> {
+                this.x = tt.getToX();
+                this.y = tt.getToY();
+                tt.setFromX(this.x);
+                tt.setFromY(this.y);
+                tt.setToX(Math.random()*800 - 400);
+                tt.setToY(Math.random()*600 - 300);
+                tt.play();
+            });
+            tt.play();
+        }
+        return stack;
     }
 
     @Override
     public Tile selectTile(int[] coords, Marker m) {
-        int team = m.getTeamNumber();
+        int team = m.getTeamNumber()-1;
+        System.out.println("Woah. you selected a tile, team " + team);
         //selections[team].add(new Point(coords));
         if (selections[0][coords[0]][coords[1]][coords[2]] || selections[1][coords[0]][coords[1]][coords[2]])
             return null;
@@ -159,33 +201,33 @@ public class ThreeDimensionalBoard implements GameBoard {
          */
 
         // check if team 1 (i=0) has won
-        for (int team = 0; team < 2; team++){
-            boolean[][][] selections = this.selections[team];
+        for (int team = 1; team <= 2; team++){
+            boolean[][][] selections = this.selections[team-1];
             // checking each XY square
             for (int z = 0; z < n; z++){
                 // check x's
-                System.out.println("0");
+                //System.out.println("0");
                 for (int x = 0; x < n; x++) {
                     boolean winByXs = true;
                     for (int y = 0; y < n; y++) if (!selections[x][y][z]) winByXs = false;
                     if (winByXs) return team;
                 }
                 // check z's
-                System.out.println("1");
+                //System.out.println("1");
                 for (int y = 0; y < n; y++) {
                     boolean winByZs = true;
                     for (int x = 0; x < n; x++) if (!selections[x][y][z]) winByZs = false;
                     if (winByZs) return team;
                 }
                 // check diagonals
-                System.out.println("2");
+                //System.out.println("2");
                 boolean winByXZs1 = true;
                 for (int xy = 0; xy < n; xy++){
                     if (!selections[xy][xy][z]) winByXZs1 = false;
                 }
                 if (winByXZs1) return team;
 
-                System.out.println("3");
+                //System.out.println("3");
                 boolean winByXZs2 = true;
                 for (int x = 0; x < n; x++){
                     int y = n-x-1;
@@ -196,28 +238,28 @@ public class ThreeDimensionalBoard implements GameBoard {
             // checking each XZ square
             for (int y = 0; y < n; y++){
                 // check x's
-                System.out.println("0");
+                //System.out.println("0");
                 for (int x = 0; x < n; x++) {
                     boolean winByXs = true;
                     for (int z = 0; z < n; z++) if (!selections[x][y][z]) winByXs = false;
                     if (winByXs) return team;
                 }
                 // check z's
-                System.out.println("1");
+                //System.out.println("1");
                 for (int z = 0; z < n; z++) {
                     boolean winByZs = true;
                     for (int x = 0; x < n; x++) if (!selections[x][y][z]) winByZs = false;
                     if (winByZs) return team;
                 }
                 // check diagonals
-                System.out.println("2");
+                //System.out.println("2");
                 boolean winByXZs1 = true;
                 for (int xz = 0; xz < n; xz++){
                     if (!selections[xz][y][xz]) winByXZs1 = false;
                 }
                 if (winByXZs1) return team;
 
-                System.out.println("3");
+                //System.out.println("3");
                 boolean winByXZs2 = true;
                 for (int x = 0; x < n; x++){
                     int z = n-x-1;
@@ -228,21 +270,21 @@ public class ThreeDimensionalBoard implements GameBoard {
             // checking each YZ square
             for (int x = 0; x < n; x++){
                 // check y's
-                System.out.println("4");
+                //System.out.println("4");
                 for (int y = 0; y < n; y++) {
                     boolean winYs = true;
                     for (int z = 0; z < n; z++) if (!selections[x][y][z]) winYs = false;
                     if (winYs) return team;
                 }
                 // check z's
-                System.out.println("5");
+                //System.out.println("5");
                 for (int z = 0; z < n; z++) {
                     boolean winZs = true;
                     for (int y = 0; y < n; y++) if (!selections[x][y][z]) winZs = false;
                     if (winZs) return team;
                 }
                 // check diagonals
-                System.out.println("6");
+                //System.out.println("6");
                 boolean winYZs1 = true;
                 for (int yz = 0; yz < n; yz++){
                     if (!selections[x][yz][yz]) winYZs1 = false;
@@ -250,7 +292,7 @@ public class ThreeDimensionalBoard implements GameBoard {
                 if (winYZs1) return team;
 
                 boolean winYZs2 = true;
-                System.out.println("7");
+                //System.out.println("7");
                 for (int z = 0; z < n; z++){
                     int y = n-x-1;
                     if (!selections[x][y][z]) winYZs2 = false;
@@ -259,13 +301,13 @@ public class ThreeDimensionalBoard implements GameBoard {
             }
             // check each diagonal
             boolean winXYZs = true;
-            System.out.println("8");
+            //System.out.println("8");
             for (int xyz = 0; xyz < n; xyz++){
                 if (!selections[xyz][xyz][xyz]) winXYZs = false;
             }
             if (winXYZs) return team;
 
-            System.out.println("9");
+            //System.out.println("9");
             boolean winXYZs2 = true;
             for (int xy = 0; xy < n; xy++){
                 int z = n - xy - 1;
@@ -273,7 +315,7 @@ public class ThreeDimensionalBoard implements GameBoard {
             }
             if (winXYZs2) return team;
 
-            System.out.println("10");
+            //System.out.println("10");
             winXYZs = true;
             for (int yz = 0; yz < n; yz++){
                 int x = n - yz -1;
@@ -281,7 +323,7 @@ public class ThreeDimensionalBoard implements GameBoard {
             }
             if (winXYZs) return team;
 
-            System.out.println("11");
+            //System.out.println("11");
             winXYZs = true;
             for (int y = 0; y < n; y++){
                 int xz = n - y - 1;
@@ -294,22 +336,24 @@ public class ThreeDimensionalBoard implements GameBoard {
     }
 
     private boolean hasAvailableTiles(){
-        return true;
+        for (ClassicBoard b : boards)
+            if (b.hasAvailableTiles()) return true;
+        return false;
     }
 
     @Override
     public Tile getTile(int[] coords) {
-        return null;
+        return this.boards[coords[2]].getTile(new int[]{coords[0], coords[1]});
     }
 
     @Override
     public void spin() {
-
+        this.spin = true;
     }
 
     @Override
     public void rebound() {
-
+        this.rebound = true;
     }
 
     @Override
@@ -319,12 +363,24 @@ public class ThreeDimensionalBoard implements GameBoard {
 
     @Override
     public void clearEffects() {
-
+        this.spin = false;
+        this.rebound = false;
     }
 
     @Override
     public void rotate(String direction) {
-
+        switch (direction){
+            case "cw":
+            {
+                this.rotations--;
+                break;
+            }
+            case "ccw":
+            {
+                this.rotations++;
+                break;
+            }
+        }
     }
 }
 
