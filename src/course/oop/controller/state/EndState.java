@@ -43,6 +43,7 @@ public class EndState implements GameState {
                 s.append(", ").append(winners.get(i));
             }
             for (Player winner : winners) {
+                winner.awardCash();
                 winner.addWin();
                 if (winner.isHuman()) FileIO.writePlayer(winner);
             }

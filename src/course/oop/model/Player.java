@@ -8,6 +8,7 @@ public class Player implements Serializable {
     private String password;
     private int marker;
     private int wins, losses; // todo implement for player records
+    private int cash;
 
     public static final int DEFAULT_MARKER = 1;
 
@@ -20,6 +21,18 @@ public class Player implements Serializable {
         this.marker = marker;
         this.wins = 0;
         this.losses = 0;
+    }
+
+    public boolean charge(int cash){
+        if (this.cash >= cash){
+            this.cash -= cash;
+            return true;
+        }
+        return false;
+    }
+    public void awardCash(){
+        this.cash += 100;
+        System.out.println("CASH! " + this.cash);
     }
 
 
