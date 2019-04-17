@@ -113,8 +113,8 @@ public class ClassicBoard implements GameBoard {
            images.put(emojiID, image);
 
            emoji = new ImageView(image);
-           emoji.setFitWidth(s-5);
-           emoji.setFitHeight(s-5);
+           emoji.setFitWidth(s-10);
+           emoji.setFitHeight(s-10);
 
            // onClick
            String command = String.format("select %d %d", row, col);
@@ -125,6 +125,7 @@ public class ClassicBoard implements GameBoard {
            });
 
            board.add(emoji, col, row);
+           board.setAlignment(Pos.CENTER);
         }
         // Setup board constraints
         ColumnConstraints cMax = new ColumnConstraints(s,s,s);
@@ -134,8 +135,8 @@ public class ClassicBoard implements GameBoard {
 
         // Setup tic tac toe board image
         ImageView gridImage = new ImageView(new Image("ttt.jpg"));
-        gridImage.setFitWidth(s*3);
-        gridImage.setFitHeight(s*3);
+        gridImage.setFitWidth(s*n);
+        gridImage.setFitHeight(s*n);
         board.setAlignment(Pos.CENTER);
 
         stack.getChildren().addAll(gridImage, board);

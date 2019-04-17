@@ -3,6 +3,7 @@ package course.oop.view;
 import course.oop.controller.Controller;
 import course.oop.fileio.FileIO;
 import course.oop.model.Player;
+import course.oop.util.Utilities;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -115,6 +116,17 @@ public class SetupView implements TTTView {
             if (threedim.isSelected()) Controller.execute("set three_dimensional on");
             else Controller.execute("set three_dimensional off");
         });
+        // variable N
+        HBox variableN = new HBox();
+        Label variableNLabel = new Label("N =");
+        TextField variableNInput = new TextField("3");
+        //variableNInput.setTextFormatter(new TextFormatter)
+        variableN.getChildren().addAll(variableNLabel, variableNInput);
+
+        threedim.setOnAction(e -> {
+            if (threedim.isSelected()) Controller.execute("set three_dimensional on");
+            else Controller.execute("set three_dimensional off");
+        });
         // Status
         this.status = new Label();
 
@@ -137,7 +149,9 @@ public class SetupView implements TTTView {
                     addError(ex.getMessage());
                 }
             // set timeout
+            // TODO verify input
             Controller.execute(String.format("set timeout %d", Integer.parseInt(timeout.getText())));;
+            Controller.execute(String.format("set n %d", Utilities.parseIntValue(variableNInput.getText())));
             if (statusMessages.isEmpty()) Controller.execute("start");
             else updateMessages();
         });
@@ -154,6 +168,7 @@ public class SetupView implements TTTView {
         root.add(properties, 0, 2);
         root.add(ultimate, 0, 3);
         root.add(threedim, 0, 4);
+        root.add(variableN, 0, 5);
         root.add(status, 3, 1);
         root.add(mainmenu, 2, 2);
         root.add(start, 2, 1);

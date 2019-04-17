@@ -28,6 +28,7 @@ public class GameSetupState implements GameState {
         this.commands = new HashMap<>();
         Command SET = c -> {
             String attribute = c.getArgv()[1];
+            if (c.getArgv().length == 2) return GameSetupState.this;
             String value = c.getArgv()[2];
             gameConfig.setAttribute(attribute, value);
             return GameSetupState.this;

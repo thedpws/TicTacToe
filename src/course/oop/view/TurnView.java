@@ -17,6 +17,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
@@ -80,7 +81,7 @@ public class TurnView implements TTTView {
         bottom.add(status, 1, 0);
         bottom.setAlignment(Pos.TOP_CENTER);
         status.setFont(Font.font(20));
-        this.scene = new Scene(root, 800, 600);
+        this.scene = new Scene(root, 800, 600, Color.BLACK);
 
         this.root = root;
     }
