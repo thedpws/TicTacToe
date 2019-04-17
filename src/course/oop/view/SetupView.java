@@ -208,9 +208,10 @@ public class SetupView implements TTTView {
 
 class PlayerSetup {
     private ImageView emojiImage;
-    private int emoji = 0;
+    private int emoji = 1;
     private boolean computer;
     private final GridPane menu;
+    private Player p;
 
     private ComboBox usernameCombo;
 
@@ -254,6 +255,7 @@ class PlayerSetup {
             Player p = FileIO.loadPlayer(username);
             if (p.getMarkerID() != Player.DEFAULT_MARKER) emoji = p.getMarkerID();
             emojiImage.setImage(new Image(String.format("%d.png", emoji % SetupView.MAX_EMOJI)));
+            this.p = p;
         });
 
         menu.add(usernameLabel, 0, 0);
@@ -265,11 +267,18 @@ class PlayerSetup {
         emojiImage.setFitHeight(200);
 
         Button emojiPlus = new Button(">");
-        emojiPlus.setOnAction(e -> emojiImage.setImage(new Image(String.format("%d.png", ++emoji % SetupView.MAX_EMOJI))));
+        emojiPlus.setOnAction(e -> {
+            if (p == null) emojiImage.setImage(new Image((++emoji % 3 + 1) + ".png"));
+            //emojiImage.setImage(new Image(String.format("%d.png", ++emoji % SetupView.MAX_EMOJI)))
+            else emojiImage.setImage(new Image(p.getEmoji(++emoji) + ".png"));
+        });
         Button emojiMinus = new Button("<");
         emojiMinus.setOnAction(e -> {
-            if (emoji == 0) emoji += SetupView.MAX_EMOJI;
-            emojiImage.setImage(new Image(String.format("%d.png", (--emoji) % SetupView.MAX_EMOJI)));
+            //if (emoji == 0) emoji += SetupView.MAX_EMOJI;
+            if (p != null)
+            emojiImage.setImage(new Image(p.getEmoji(--emoji) + ".png"));
+            else
+            emojiImage.setImage(new Image(String.format("%d.png", (--emoji) % 3 + 1)));
         });
 
 

@@ -1,6 +1,11 @@
 package course.oop.model;
 
+import course.oop.fileio.FileIO;
+
 import java.io.Serializable;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
 public class Player implements Serializable {
     private boolean valid;
@@ -9,6 +14,7 @@ public class Player implements Serializable {
     private int marker;
     private int wins, losses; // todo implement for player records
     private int cash;
+    public List<Integer> emojisUnlocked;
 
     public static final int DEFAULT_MARKER = 1;
 
@@ -17,15 +23,34 @@ public class Player implements Serializable {
     }
 
     public Player(String username, int marker) {
+        this.emojisUnlocked = new LinkedList<>();
+        emojisUnlocked.add(1);
+        emojisUnlocked.add(2);
+        emojisUnlocked.add(3);
         this.username = username;
         this.marker = marker;
         this.wins = 0;
         this.losses = 0;
     }
 
+
+    public void unlockEmoji(int emojiId){
+        this.emojisUnlocked.add(emojiId);
+        FileIO.writePlayer(this);
+    }
+
+    public int getEmoji(int index){
+        while (index < 0) index += this.emojisUnlocked.size();
+        return this.emojisUnlocked.get(index % emojisUnlocked.size());
+    }
+    public boolean hasUnlockedEmoji(int emojiID){
+        return this.emojisUnlocked.contains(emojiID);
+    }
+
     public boolean charge(int cash){
         if (this.cash >= cash){
             this.cash -= cash;
+            FileIO.writePlayer(this);
             return true;
         }
         return false;

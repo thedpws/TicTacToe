@@ -21,6 +21,8 @@ public class InitialState implements GameState {
         commands = new HashMap<>();
         Command SETUP = c -> new GameSetupState();
         commands.put("setup", SETUP);
+        Command STORE = c -> new StoreState();
+        commands.put("store", STORE);
     }
 
     @Override
