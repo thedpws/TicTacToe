@@ -14,6 +14,7 @@ public class GameConfig {
     private final int MIN_PLAYERS = 1;
     private final int MAX_PLAYERS = 2;
 
+    String status;
     final int n = 3;
     boolean properties = false;
     boolean ultimate = false;
@@ -96,6 +97,12 @@ public class GameConfig {
 
     boolean properties(){
        return properties;
+    }
+    String getStatus(){
+        return status;
+    }
+    public void setStatus(String status){
+        this.status = status;
     }
 
     private void setTimeout(int timeout) {

@@ -11,16 +11,17 @@ public class Game {
 
     public static final int TIE = 3;
     public static final int NO_WINNER = 0;
-    private String status = "";
 
     // Config separates the configuration from the actual game itself.
     // This allows for multiple games to use the same static config (rematches)
     // This also allows for serialization of configurations for faster configurations in the future.
     private final GameConfig config;
     private final GameBoard board;
+    private String status;
 
     public Game(GameConfig config) {
         this.config = config;
+        this.status = config.getStatus();
         if (this.config.ultimate) this.board = new UltimateBoard(config.properties(), config.n);
         else if (this.config.three_dimensional) this.board = new ThreeDimensionalBoard(config.properties(), config.n);
         else this.board = new ClassicBoard(config.properties(), config.n);
@@ -51,6 +52,9 @@ public class Game {
 
     public String selectRandomTile() {
         return board.selectRandomTile();
+    }
+    public void setStatus(String s){
+        this.status = s;
     }
 
     /*

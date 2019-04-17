@@ -56,6 +56,11 @@ public class TurnState implements GameState {
             int winner = game.determineWinner();
 
             if (winner == 0) return getNextTurnState();
+            if (winner == 3) {
+                game.getConfig().setStatus("Tie Breaker!");
+                game.clearEffects();
+                return new GameInitState(game.getConfig());
+            }
             return new EndState(game, winner);
         };
         commands.put("select", SELECT);
