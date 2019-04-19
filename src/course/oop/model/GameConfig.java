@@ -117,13 +117,13 @@ public class GameConfig {
     }
 
     // TODO Don't call until all players are valid
-    public void createPlayer(String username, String marker, String team) {
+    public void createPlayer(String username, String markerIndex, String team) {
 
-        int markerID = Integer.parseInt(marker);
+        int markerIndexInt = Integer.parseInt(markerIndex);
         Player p = FileIO.loadPlayer(username);
 
         // Update Player marker
-        p.updateMarkerID(markerID);
+        p.updateMarkerIndex(markerIndexInt);
         FileIO.writePlayer(p);
 
         System.out.println("GameConfig.java: " + p.asEntry());
