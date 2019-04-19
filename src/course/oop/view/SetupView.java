@@ -288,7 +288,7 @@ class PlayerSetup {
         makeComputer.setOnAction(e -> {
             computer = !computer;
             usernameCombo.setDisable(computer);
-            emojiImage.setImage(new Image(computer ? "cpu.png" : String.format("%d.png", p.getEmoji(emojiIndex))));
+            emojiImage.setImage(new Image(computer ? "39.png" : String.format("%d.png", p.getEmoji(emojiIndex))));
             emojiPlus.setDisable(computer);
             emojiMinus.setDisable(computer);
         });

@@ -71,6 +71,8 @@ public class TurnState implements GameState {
             return new TurnState(this.game, this.team, this.teamPlayer);
         };
         commands.put("rotate", ROTATE);
+        Command FORFEIT = c -> new EndState(g,3);
+        commands.put("forfeit", FORFEIT);
     }
 
     @Override

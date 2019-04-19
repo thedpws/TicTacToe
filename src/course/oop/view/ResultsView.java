@@ -23,7 +23,7 @@ public class ResultsView extends TurnView {
 
         // Set winner message
         int winnerId = g.determineWinner();
-        String winner = "problem";
+        String winner = "Nobody";
         switch (winnerId) {
             case 1:
             case 2:

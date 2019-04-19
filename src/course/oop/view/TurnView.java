@@ -37,7 +37,14 @@ public class TurnView implements TTTView {
         BorderPane root = new BorderPane();
         Parent center = game.getDisplay();
         Label effect = new Label(game.getStatus());
-        root.setTop(effect);
+        //HBox top = new HBox();
+        VBox buttons = new VBox();
+        //top.prefWidthProperty().bind(root.widthProperty());
+        //top.setFill
+        //top.setSpacing(Spacing.MAX)
+        //root.setTop(top);
+        root.setLeft(buttons);
+
 
         root.setCenter(center);
 
@@ -70,19 +77,28 @@ public class TurnView implements TTTView {
         }
 
         System.out.println(center.getRotationAxis());
-        Button rotateCCW = new Button("Rotate");
+        Button rotateCCW = new Button("Rotate CCW");
         rotateCCW.setOnMouseClicked(e -> Controller.execute("rotate ccw"));
-        Button rotateCW = new Button("Rotate");
+        Button rotateCW = new Button("Rotate CW");
         rotateCW.setOnMouseClicked(e -> Controller.execute("rotate cw"));
+        buttons.getChildren().addAll(rotateCCW, rotateCW);
+        /*
         root.setLeft(rotateCW);
         root.setRight(rotateCCW);
+         */
 
         status = new Label(String.format("It's %s's turn!", game.getPlayer(team, player[team])));
         bottom.add(status, 1, 0);
+        Button forfeit = new Button("Forfeit");
+        forfeit.setOnAction(e -> Controller.execute("forfeit"));
+        bottom.add(forfeit, 10, 0);
         bottom.setAlignment(Pos.TOP_CENTER);
         status.setFont(Font.font(20));
         //center.get
+        buttons.getChildren().add(forfeit);
+        effect.setAlignment(Pos.CENTER);
         //this.scene = new Scene(root, 1600, 1200, Color.BLACK);
+        root.setTop(effect);
 
 
         this.root = root;

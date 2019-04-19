@@ -18,5 +18,8 @@ public class Computer extends Player {
     @Override
     public boolean isComputer(){ return true; }
 
+    @Override
+    public String getMarker(){return "39";}
+
 
 }
