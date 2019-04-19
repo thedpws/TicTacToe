@@ -1,13 +1,20 @@
 package course.oop.model;
 
+import course.oop.fileio.FileIO;
+
 import java.io.Serializable;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
 public class Player implements Serializable {
     private boolean valid;
     private final String username;
     private String password;
-    private int marker;
+    private int markerIndex;
     private int wins, losses; // todo implement for player records
+    private int cash;
+    public List<Integer> emojisUnlocked;
 
     public static final int DEFAULT_MARKER = 1;
 
@@ -16,10 +23,43 @@ public class Player implements Serializable {
     }
 
     public Player(String username, int marker) {
+        this.emojisUnlocked = new LinkedList<>();
+        emojisUnlocked.add(1);
+        emojisUnlocked.add(2);
+        emojisUnlocked.add(3);
         this.username = username;
-        this.marker = marker;
+        this.markerIndex = marker;
         this.wins = 0;
         this.losses = 0;
+    }
+
+
+    public void unlockEmoji(int emojiId){
+        this.emojisUnlocked.add(emojiId);
+        FileIO.writePlayer(this);
+    }
+
+    public int getEmoji(int index){
+        while (index < 0) index += this.emojisUnlocked.size();
+        return this.emojisUnlocked.get(index % emojisUnlocked.size());
+    }
+
+    public boolean hasUnlockedEmoji(int emojiID){
+        return this.emojisUnlocked.contains(emojiID);
+    }
+
+    public boolean charge(int cash){
+        if (this.cash >= cash){
+            this.cash -= cash;
+            FileIO.writePlayer(this);
+            return true;
+        }
+        return false;
+    }
+    public void awardCash(){
+        this.cash += 100;
+        System.out.println("CASH! " + this.cash);
+        //FileIO.writePlayer(this);
     }
 
 
@@ -29,11 +69,15 @@ public class Player implements Serializable {
     }
 
     public String getMarker() {
-        return Integer.toString(marker);
+        System.out.println("Marker index is " + markerIndex + ". returning " + getEmoji(markerIndex));
+        System.out.println("list is " + this.emojisUnlocked);
+        return Integer.toString(getEmoji(this.markerIndex));
+        //return Integer.toString(this.getEmoji(this.markerIndex)));
     }
 
-    public int getMarkerID() {
-        return marker;
+    public int getMarkerIndex() {
+        return this.markerIndex;
+        //return Integer.parseInt(getMarker());
     }
 
     public void addWin() {
@@ -53,8 +97,10 @@ public class Player implements Serializable {
     }
     public boolean isComputer(){ return false; }
 
-    public void updateMarkerID(int id) {
-        this.marker = id;
+    public void updateMarkerIndex(int index) {
+        this.markerIndex = index;
     }
+    public int getCash(){return this.cash;}
+    public String getUsername(){return this.username;}
 }
 

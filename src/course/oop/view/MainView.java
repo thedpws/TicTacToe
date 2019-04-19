@@ -25,12 +25,14 @@ public class MainView implements TTTView {
         // Main Menu
         Button start = new Button("Start");
         Button quit = new Button("Quit");
+        Button store = new Button("Shop");
 
         // Actions
         start.setOnAction(e -> onStart());
         quit.setOnAction(e -> Controller.execute("quit"));
+        store.setOnAction(e -> Controller.execute("store"));
 
-        root.getChildren().addAll(title, start, quit);
+        root.getChildren().addAll(title, start, store, quit);
         this.scene = new Scene(root, 800, 600);
     }
 
