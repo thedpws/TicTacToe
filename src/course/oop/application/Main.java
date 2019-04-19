@@ -8,8 +8,10 @@ import javafx.stage.Stage;
 public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
-        FileIO.init();
+        //FileIO.init();
         Controller.initiate(primaryStage);
+        //primaryStage.setMaximized(true);
+        primaryStage.setFullScreen(true);
         primaryStage.setTitle("Tic Tac Toe: The Game");
         primaryStage.show();
     }

@@ -2,6 +2,7 @@ package course.oop.view;
 
 import course.oop.controller.Controller;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -9,7 +10,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 
 public class MainView implements TTTView {
-    private final Scene scene;
+    //private final Scene scene;
+    private final Parent root;
 
     public MainView() {
 
@@ -33,12 +35,13 @@ public class MainView implements TTTView {
         store.setOnAction(e -> Controller.execute("store"));
 
         root.getChildren().addAll(title, start, store, quit);
-        this.scene = new Scene(root, 800, 600);
+        //this.scene = new Scene(root, 800, 600);
+        this.root = root;
     }
 
     @Override
-    public Scene getScene() {
-        return scene;
+    public Parent getRoot() {
+        return root;
     }
 
     private void onStart() {

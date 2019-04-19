@@ -3,6 +3,7 @@ package course.oop.controller.state;
 import course.oop.view.CommandCall;
 import course.oop.view.MainView;
 import course.oop.view.TTTView;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 
 import java.util.HashMap;
@@ -43,8 +44,8 @@ public class InitialState implements GameState {
     }
 
     @Override
-    public Scene asScene() {
-        return view.getScene();
+    public Parent asNode() {
+        return view.getRoot();
     }
 
 }

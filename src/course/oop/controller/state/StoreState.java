@@ -4,8 +4,9 @@ import course.oop.fileio.FileIO;
 import course.oop.model.Player;
 import course.oop.util.Utilities;
 import course.oop.view.CommandCall;
+import course.oop.view.StoreView;
 import course.oop.view.TTTView;
-import javafx.scene.Scene;
+import javafx.scene.Parent;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -50,7 +51,7 @@ public class StoreState implements GameState {
     }
 
     @Override
-    public Scene asScene() {
-        return view.getScene();
+    public Parent asNode() {
+        return view.getRoot();
     }
 }

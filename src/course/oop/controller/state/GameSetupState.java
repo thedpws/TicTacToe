@@ -5,6 +5,7 @@ import course.oop.util.Utilities;
 import course.oop.view.CommandCall;
 import course.oop.view.SetupView;
 import course.oop.view.TTTView;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 
 import java.util.HashMap;
@@ -98,8 +99,8 @@ public class GameSetupState implements GameState {
 
 
     @Override
-    public Scene asScene() {
-        return view.getScene();
+    public Parent asNode() {
+        return view.getRoot();
     }
 
 

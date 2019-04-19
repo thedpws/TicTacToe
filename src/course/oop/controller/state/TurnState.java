@@ -4,6 +4,7 @@ import course.oop.model.Game;
 import course.oop.model.Player;
 import course.oop.view.CommandCall;
 import course.oop.view.TurnView;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 
 import java.time.LocalTime;
@@ -107,8 +108,8 @@ public class TurnState implements GameState {
     }
 
     @Override
-    public Scene asScene() {
-        return view.getScene();
+    public Parent asNode() {
+        return view.getRoot();
     }
 
 }

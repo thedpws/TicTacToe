@@ -7,6 +7,7 @@ import course.oop.util.Utilities;
 import course.oop.view.CommandCall;
 import course.oop.view.ResultsView;
 import course.oop.view.TTTView;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 
 import java.util.HashMap;
@@ -121,8 +122,8 @@ public class EndState implements GameState {
     }
 
     @Override
-    public Scene asScene() {
-        return this.view.getScene();
+    public Parent asNode() {
+        return this.view.getRoot();
     }
 
 }

@@ -1,6 +1,7 @@
 package course.oop.controller.state;
 
 import course.oop.view.CommandCall;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 
 public interface GameState {
@@ -12,7 +13,7 @@ public interface GameState {
 
     void printInitialText();
 
-    Scene asScene();
+    Parent asNode();
 }
 
 

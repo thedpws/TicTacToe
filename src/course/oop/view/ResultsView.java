@@ -5,6 +5,7 @@ import course.oop.model.Game;
 import javafx.animation.RotateTransition;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -63,7 +64,7 @@ public class ResultsView extends TurnView {
         newRoot.getChildren().addAll(this.root, menu, winnerMessage);
         this.root = newRoot;
 
-        this.scene = new Scene(this.root, 800, 600);
+        //this.scene = new Scene(this.root, 800, 600);
 
         RotateTransition rt = new RotateTransition();
         rt.setDuration(Duration.millis(10));
@@ -74,8 +75,8 @@ public class ResultsView extends TurnView {
     }
 
     @Override
-    public Scene getScene() {
-        return scene;
+    public Parent getRoot() {
+        return root;
     }
 
 }

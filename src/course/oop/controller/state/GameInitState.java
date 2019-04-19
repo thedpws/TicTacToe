@@ -4,6 +4,7 @@ import course.oop.model.Game;
 import course.oop.model.GameConfig;
 import course.oop.util.Utilities;
 import course.oop.view.CommandCall;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 
 public class GameInitState implements GameState {
@@ -35,7 +36,7 @@ public class GameInitState implements GameState {
     }
 
     @Override
-    public Scene asScene() {
+    public Parent asNode() {
         return null;
     }
 }

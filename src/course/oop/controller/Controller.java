@@ -4,6 +4,7 @@ import course.oop.controller.state.*;
 import course.oop.model.Game;
 import course.oop.util.Utilities;
 import course.oop.view.CommandCall;
+import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 
@@ -22,14 +23,17 @@ public class Controller {
         INSTANCE = new Controller(primaryStage);
         INSTANCE.primaryStage = primaryStage;
         INSTANCE.gameState = new InitialState();
-        INSTANCE.primaryStage.setScene(INSTANCE.gameState.asScene());
+        INSTANCE.primaryStage.setScene(new Scene(INSTANCE.gameState.asNode()));
     }
 
 
     private Controller(Stage s) {
         this.primaryStage = s;
         this.gameState = new InitialState();
-        this.primaryStage.setScene(this.gameState.asScene());
+        //this.primaryStage.setScene(this.gameState.asScene());
+        primaryStage.setScene(new Scene(this.gameState.asNode()));
+        //this.primaryStage.setMaximized(true);
+        //this.primaryStage.setFullScreen(true);
     }
 
     private static void printPrompt() {
@@ -78,7 +82,7 @@ public class Controller {
                     GameInitState s = (GameInitState) rval;
                     INSTANCE.game = s.produceGame();
                     INSTANCE.gameState = new TurnState(INSTANCE.game);
-                    INSTANCE.primaryStage.setScene(INSTANCE.gameState.asScene());
+                    INSTANCE.primaryStage.getScene().setRoot(INSTANCE.gameState.asNode());
                     break;
                 }
 
@@ -87,7 +91,9 @@ public class Controller {
                 }
 
                 INSTANCE.gameState = rval;
-                INSTANCE.primaryStage.setScene(rval.asScene());
+                //INSTANCE.primaryStage.setScene(rval.asScene());
+                INSTANCE.primaryStage.getScene().setRoot(rval.asNode());
+                //INSTANCE.primaryStage.setFullScreen(true);
                 break;
             }
         }

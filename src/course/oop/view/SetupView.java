@@ -6,6 +6,7 @@ import course.oop.model.Player;
 import course.oop.util.Utilities;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -19,7 +20,8 @@ import javafx.scene.text.TextAlignment;
 import java.util.*;
 
 public class SetupView implements TTTView {
-    private final Scene scene;
+    //private final Scene scene;
+    private final Parent root;
 
     private boolean computer;
 
@@ -131,7 +133,8 @@ public class SetupView implements TTTView {
         this.status = new Label();
 
 
-        this.scene = new Scene(root, 800, 600);
+        //this.scene = new Scene(root, 800, 600);
+        this.root = root;
 
         start.setOnAction(e -> {
             //Controller.execute(String.format("set players %d", players));
@@ -186,8 +189,8 @@ public class SetupView implements TTTView {
     }
 
     @Override
-    public Scene getScene() {
-        return scene;
+    public Parent getRoot() {
+        return root;
     }
 
     private void addError(String s){

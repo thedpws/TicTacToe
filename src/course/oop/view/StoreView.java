@@ -1,9 +1,10 @@
-package course.oop.controller.state;
+package course.oop.view;
 
 import course.oop.controller.Controller;
 import course.oop.fileio.FileIO;
 import course.oop.model.Player;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -21,11 +22,12 @@ import java.util.List;
 import static java.lang.Thread.sleep;
 
 public class StoreView implements course.oop.view.TTTView {
+    private final Parent root;
     private Player p;
     private int cols = 15;
     private Label cash;
     private ComboBox playerSelection;
-    private Scene scene;
+    //private Scene scene;
     public StoreView(){
 
         BorderPane parent = new BorderPane();
@@ -85,11 +87,13 @@ public class StoreView implements course.oop.view.TTTView {
 
         parent.setTop(playerSelection);
         parent.setCenter(store);
-        this.scene = new Scene(parent, 800, 600);
+        //this.scene = new Scene(parent, 800, 600);
+        this.root = parent;
+        //this.scene = new Scene(parent);
     }
     @Override
-    public Scene getScene() {
-        return this.scene;
+    public Parent getRoot() {
+        return this.root;
     }
 
     private void loadPlayer(Player p, GridPane store){

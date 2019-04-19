@@ -81,14 +81,16 @@ public class TurnView implements TTTView {
         bottom.add(status, 1, 0);
         bottom.setAlignment(Pos.TOP_CENTER);
         status.setFont(Font.font(20));
-        this.scene = new Scene(root, 800, 600, Color.BLACK);
+        //center.get
+        //this.scene = new Scene(root, 1600, 1200, Color.BLACK);
+
 
         this.root = root;
     }
 
 
     @Override
-    public Scene getScene() {
-        return this.scene;
+    public Parent getRoot() {
+        return this.root;
     }
 }
