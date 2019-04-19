@@ -58,6 +58,7 @@ public class Player implements Serializable {
     public void awardCash(){
         this.cash += 100;
         System.out.println("CASH! " + this.cash);
+        //FileIO.writePlayer(this);
     }
 
 
@@ -94,5 +95,7 @@ public class Player implements Serializable {
     public void updateMarkerID(int id) {
         this.marker = id;
     }
+    public int getCash(){return this.cash;}
+    public String getUsername(){return this.username;}
 }
 

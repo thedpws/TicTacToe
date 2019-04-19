@@ -153,6 +153,7 @@ public class UltimateBoard implements GameBoard{
                 emoji.setFitHeight(subBoardSide*n - 5);
                 emoji.setFitWidth(subBoardSide*n - 5);
                 substack.getChildren().addAll(tttBoard, emoji);
+                substack.getChildren().forEach(child -> StackPane.setAlignment(child, Pos.CENTER));
             }
             board.add(substack, col, row);
         }
@@ -197,6 +198,7 @@ public class UltimateBoard implements GameBoard{
         rt.play();
         System.out.println("angle " + rt.getByAngle());
         stack.getChildren().add(board);
+        StackPane.setAlignment(board, Pos.CENTER);
 
         return stack;
     }

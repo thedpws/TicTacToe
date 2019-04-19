@@ -7,6 +7,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -17,20 +18,26 @@ import javafx.scene.layout.VBox;
 import java.util.LinkedList;
 import java.util.List;
 
+import static java.lang.Thread.sleep;
+
 public class StoreView implements course.oop.view.TTTView {
-    private String username;
-    @Override
-    public Scene getScene() {
+    private Player p;
+    private int cols = 15;
+    private Label cash;
+    private ComboBox playerSelection;
+    private Scene scene;
+    public StoreView(){
+
         BorderPane parent = new BorderPane();
 
-        ComboBox playerSelection = new ComboBox();
+        this.playerSelection = new ComboBox();
+        this.playerSelection.setEditable(true);
         List<String>  entries = new LinkedList<>();
         FileIO.loadHashMap().values().forEach(player -> entries.add(player.asEntry()));
         playerSelection.getItems().addAll(entries);
 
         GridPane store = new GridPane();
-        final int rows = 5;
-        final int cols = 20;
+        //final int cols = 15;
         // fill with emojis
         for (int i = 0; i < 39; i++){
             VBox storeItem = new VBox();
@@ -38,43 +45,73 @@ public class StoreView implements course.oop.view.TTTView {
             emoji.setFitHeight(50);
             emoji.setFitWidth(50);
             Button buy = new Button("$100");
+            int I = i;
+            buy.setOnAction(e -> {
+                Controller.execute("buy " + p.getUsername() + " " + I);
+                this.p = FileIO.loadPlayer(p.getUsername());
+                loadPlayer(p, store);
+            });
             storeItem.getChildren().addAll(emoji, buy);
-            store.add(storeItem, i % cols, i / rows);
+            store.add(storeItem, i % cols, i / cols);
             //storeItem.getChildren().addAll();
 
         }
         // load player, update bought emojis
+        //playerSelection.getEditor().setEditable(true);
         playerSelection.setOnAction(e -> {
-           String username = playerSelection.getEditor().getText();
-           username = username.replaceFirst("(\\w*).*", "$1");
-           this.username = username;
-           //update bought emojis
-           Player p = FileIO.loadPlayer(username);
-           List<Integer> boughtEmojis = p.emojisUnlocked;
-           boughtEmojis.forEach(emojiID -> {
-               int row = emojiID / rows;
-               int col = emojiID / cols;
-
-               for (Node child : store.getChildren()){
-                   int childCol = GridPane.getColumnIndex(child);
-                   int childRow = GridPane.getRowIndex(child);
-                   if (row == childRow && col==childCol){
-                       child.setEffect(new ColorAdjust(0, -10, 0, 0));
-                       child.setDisable(true);
-                       break;
-                   }
-               }
-           });
+            System.out.println(playerSelection.getEditor().getText());
+            String username = playerSelection.getEditor().getText();
+            username = username.replaceFirst("(\\w*).*", "$1");
+            //this.username = username;
+            this.p = FileIO.loadPlayer(username);
+            /*
+            try {
+                sleep(1000);
+            } catch (InterruptedException ex) {
+                ex.printStackTrace();
+            }
+            */
+            loadPlayer(p, store);
 
         });
+        store.setGridLinesVisible(true);
 
         Button mainmenu = new Button("Return to main menu");
         mainmenu.setOnAction(e -> Controller.execute("mainmenu"));
         parent.setBottom(mainmenu);
+        this.cash = new Label("-");
+        parent.setRight(this.cash);
 
 
         parent.setTop(playerSelection);
         parent.setCenter(store);
-        return new Scene(parent, 800, 600);
+        this.scene = new Scene(parent, 800, 600);
+    }
+    @Override
+    public Scene getScene() {
+        return this.scene;
+    }
+
+    private void loadPlayer(Player p, GridPane store){
+        this.p = p;
+        // update the money
+        this.cash.setText(Integer.toString(p.getCash()));
+        // the emojis
+        List<Integer> boughtEmojis = p.emojisUnlocked;
+        store.getChildren().forEach(child -> child.setEffect(null));
+        boughtEmojis.forEach(emojiID -> {
+            int row = emojiID / cols;
+            int col = emojiID % cols;
+
+            for (Node child : store.getChildren()){
+                int childCol = GridPane.getColumnIndex(child);
+                int childRow = GridPane.getRowIndex(child);
+                if (row == childRow && col==childCol){
+                    child.setEffect(new ColorAdjust(0, -10, 0, 0));
+                    child.setDisable(true);
+                    break;
+                }
+            }
+        });
     }
 }

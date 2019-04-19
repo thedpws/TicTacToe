@@ -250,6 +250,7 @@ class PlayerSetup {
 
         // Action handling
         usernameCombo.setOnAction(event -> {
+            System.out.println(usernameCombo.getEditor().getText());
             String username = usernameCombo.getEditor().getText();
             username = username.replaceFirst("(\\w*).*", "$1");
             Player p = FileIO.loadPlayer(username);

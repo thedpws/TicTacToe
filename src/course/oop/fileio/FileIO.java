@@ -27,7 +27,8 @@ public class FileIO {
             ObjectOutputStream oos = new ObjectOutputStream(fos);
             HashMap<String, Player> players = new HashMap<>();
             players.put("monkey", new Player("monkey", 0));
-            players.put("cooldude", new Player("cooldude", 6));
+            players.put("cooldude", new Player("cooldude", 5));
+            players.get("monkey").awardCash();
 
             oos.writeObject(players);
 

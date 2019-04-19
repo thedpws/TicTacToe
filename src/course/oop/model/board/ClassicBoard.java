@@ -130,8 +130,12 @@ public class ClassicBoard implements GameBoard {
         // Setup board constraints
         ColumnConstraints cMax = new ColumnConstraints(s,s,s);
         RowConstraints rMax = new RowConstraints(s,s,s);
+        for (int i =0 ; i <n; i++) board.getColumnConstraints().add(cMax);
+        for (int i =0 ; i <n; i++) board.getRowConstraints().add(rMax);
+        /*
         board.getColumnConstraints().addAll(cMax, cMax, cMax);
         board.getRowConstraints().addAll(rMax, rMax, rMax);
+         */
 
         // Setup tic tac toe board image
         ImageView gridImage = new ImageView(new Image("ttt.jpg"));
