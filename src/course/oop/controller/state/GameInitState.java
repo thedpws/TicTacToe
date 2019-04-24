@@ -16,7 +16,9 @@ public class GameInitState implements GameState {
     }
 
     public Game produceGame() {
-        return new Game(gameConfig);
+        Game g = new Game(gameConfig);
+        g.clearEffects();
+        return g;
     }
 
     @Override
