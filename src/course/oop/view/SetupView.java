@@ -16,6 +16,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
+import javafx.scene.paint.Color;
 
 import java.util.*;
 
@@ -61,6 +62,7 @@ public class SetupView implements TTTView {
         team2.add(initialSetup2);
 
         Button addPlayerTeam2 = new Button("Add player Team 2");
+        addPlayerTeam2.setTextFill(Color.web("#0076a3"));
         addPlayerTeam2.setOnAction(e -> {
             PlayerSetup setup = new PlayerSetup();
             team2.add(setup);
@@ -68,6 +70,7 @@ public class SetupView implements TTTView {
         });
 
         Button addPlayerTeam1 = new Button("Add player Team 1");
+        addPlayerTeam1.setTextFill(Color.web("#0076a3"));
         addPlayerTeam1.setOnAction(e -> {
             PlayerSetup setup = new PlayerSetup();
             team1.add(setup);
@@ -76,11 +79,13 @@ public class SetupView implements TTTView {
 
 
         // Start Button
-        Button start = new Button("Start game");
+        Button start = new Button("Start Game");
+        start.setTextFill(Color.web("green"));
         start.setPrefWidth(100);
         start.setAlignment(Pos.CENTER_LEFT);
 
-        Button mainmenu = new Button("REturn to main menu");
+        Button mainmenu = new Button("Return to main menu");
+        mainmenu.setTextFill(Color.web("red"));
         mainmenu.setOnAction(e -> Controller.execute("mainmenu"));
 
 
@@ -88,9 +93,10 @@ public class SetupView implements TTTView {
 
         // Timeout
         Label timeoutLabel = new Label("Timeout (s) ");
+        timeoutLabel.setTextFill(Color.web("#0076a3"));
         timeoutLabel.setTextAlignment(TextAlignment.RIGHT);
         timeoutLabel.setAlignment(Pos.BOTTOM_RIGHT);
-        timeoutLabel.setPrefWidth(200);
+        timeoutLabel.setPrefWidth(100);
         TextField timeout = new TextField("0");
         timeout.setAlignment(Pos.BOTTOM_RIGHT);
         timeout.setPrefWidth(200);
@@ -99,6 +105,7 @@ public class SetupView implements TTTView {
 
         // Tile Properties
         CheckBox properties = new CheckBox("Tiles have special properties");
+        properties.setTextFill(Color.web("0076a3"));
         properties.setOnAction(e -> {
             boolean selected = properties.isSelected();
             if (selected){
@@ -108,12 +115,14 @@ public class SetupView implements TTTView {
 
         // Ultimate TTT
         CheckBox ultimate = new CheckBox("Ultimate Tic-Tac-Toe");
+        ultimate.setTextFill(Color.web("#0076a3"));
         ultimate.setOnAction(e -> {
             if (ultimate.isSelected()) Controller.execute("set ultimate on");
             else Controller.execute("set ultimate off");
         });
         //3d TTT
         CheckBox threedim = new CheckBox("3D Tic-Tac-Toe");
+        threedim.setTextFill(Color.web("#0076a3"));
         threedim.setOnAction(e -> {
             if (threedim.isSelected()) Controller.execute("set three_dimensional on");
             else Controller.execute("set three_dimensional off");
@@ -121,6 +130,7 @@ public class SetupView implements TTTView {
         // variable N
         HBox variableN = new HBox();
         Label variableNLabel = new Label("N =");
+        variableNLabel.setTextFill(Color.web("#0076a3"));
         TextField variableNInput = new TextField("3");
         //variableNInput.setTextFormatter(new TextFormatter)
         variableN.getChildren().addAll(variableNLabel, variableNInput);
@@ -159,9 +169,9 @@ public class SetupView implements TTTView {
             else updateMessages();
         });
 
-        root.getColumnConstraints().add(new ColumnConstraints(100));
+        root.getColumnConstraints().add(new ColumnConstraints(300));
         root.getColumnConstraints().add(new ColumnConstraints(350));
-        root.getColumnConstraints().add(new ColumnConstraints(100));
+        root.getColumnConstraints().add(new ColumnConstraints(300));
         root.getColumnConstraints().add(new ColumnConstraints(350));
         root.add(addPlayerTeam1, 0, 0);
         root.add(team1Setups, 1, 0);
@@ -248,7 +258,8 @@ class PlayerSetup {
         GridPane menu = new GridPane();
 
         // Username box
-        Label usernameLabel = new Label(String.format("hey"));
+        Label usernameLabel = new Label(String.format("Name"));
+        usernameLabel.setTextFill(Color.web("#0076a3"));
         this.usernameCombo = new ComboBox();
         usernameCombo.setEditable(true);
 
@@ -274,10 +285,12 @@ class PlayerSetup {
         emojiImage.setFitHeight(200);
 
         Button emojiPlus = new Button(">");
+        emojiPlus.setTextFill(Color.web("#ff7c00"));
         emojiPlus.setOnAction(e -> {
             emojiImage.setImage(new Image(p.getEmoji(++emojiIndex) + ".png"));
         });
         Button emojiMinus = new Button("<");
+        emojiMinus.setTextFill(Color.web("#ff7c00"));
         emojiMinus.setOnAction(e -> {
             emojiImage.setImage(new Image(String.format("%d.png", p.getEmoji(--emojiIndex))));
         });

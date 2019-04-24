@@ -8,6 +8,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
+import javafx.scene.paint.Color;
 
 public class MainView implements TTTView {
     //private final Scene scene;
@@ -22,12 +23,16 @@ public class MainView implements TTTView {
 
         // Title page
         Label title = new Label("Tic-tac-toe: The Game!");
+        title.setTextFill(Color.web("#0076a3"));
         title.setFont(Font.font(50));
 
         // Main Menu
         Button start = new Button("Start");
+        start.setTextFill(Color.web("#0076a3"));
         Button quit = new Button("Quit");
+        quit.setTextFill(Color.web("red"));
         Button store = new Button("Shop");
+        store.setTextFill(Color.web("#0076a3"));
 
         // Actions
         start.setOnAction(e -> onStart());
