@@ -9,5 +9,6 @@ public class InitializeTable extends Application {
     @Override
     public void start(Stage primaryStage) {
         FileIO.init();
+        System.exit(0);
     }
 }
