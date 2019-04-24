@@ -87,7 +87,7 @@ public class TurnState implements GameState {
             System.out.println("TURN OVER");
             return getNextTurnState();
         }
-        if (game.getConfig().getTimeout() != 0 && !turnOver && LocalTime.now().isAfter(timeStarted.plusSeconds(game.getConfig().getTimeout()))) {
+        if (game.getConfig().getTimeout() > 0 && !turnOver && LocalTime.now().isAfter(timeStarted.plusSeconds(game.getConfig().getTimeout()))) {
             System.out.println("TURN OVER 2");
             return getNextTurnState();
         }
