@@ -129,9 +129,10 @@ public class UltimateBoard implements GameBoard{
                 // Setup board constraints
                 ColumnConstraints cMax = new ColumnConstraints(subBoardSide, subBoardSide, subBoardSide);
                 RowConstraints rMax = new RowConstraints(subBoardSide, subBoardSide, subBoardSide);
-                subBoard.getColumnConstraints().addAll(cMax, cMax, cMax);
-                subBoard.getRowConstraints().addAll(rMax, rMax, rMax);
-
+                for (int i = 0; i < n; i++){
+                    subBoard.getColumnConstraints().addAll(cMax);
+                    subBoard.getRowConstraints().addAll(rMax);
+                }
                 // Setup tic tac toe board image
                 ImageView gridImage = new ImageView(new Image("ttt.jpg"));
                 gridImage.setFitWidth(subBoardSide * n);

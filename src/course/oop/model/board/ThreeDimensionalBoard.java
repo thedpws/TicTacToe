@@ -100,8 +100,10 @@ public class ThreeDimensionalBoard implements GameBoard {
             tttBoard.setFitWidth(50*n);
             StackPane substack = new StackPane(tttBoard);
             GridPane board = new GridPane();
-            board.getColumnConstraints().addAll(cMax, cMax, cMax);
-            board.getRowConstraints().addAll(rMax, rMax, rMax);
+            for (int i = 0; i < n; i++)
+                board.getColumnConstraints().add(cMax);
+            for (int i = 0; i < n; i++)
+                board.getRowConstraints().add(rMax);
             board.setAlignment(Pos.CENTER);
             substack.getChildren().add(board);
 
