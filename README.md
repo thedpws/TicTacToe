@@ -1,5 +1,8 @@
 # Tic Tac Toe in a GUI. PROJECT 4 SUBMISSION
 
+## Video link
+* [Here] (https://youtu.be/CMN6kp7NuZ0) is a youtube link so you can watch me play tic tac toe. (https://youtu.be/CMN6kp7NuZ0).
+
 ## About this project
 * Built by Aeyzechiah Vasquez and Jinhong "Ivan" Liu
 * Built using IntelliJ IDEA IDE and Java 8
@@ -22,5 +25,3 @@
 * 2D nxn TTT (+15)
 * Merging (+10)
 
-## Video link
-* [Here] (https://youtu.be/CMN6kp7NuZ0) is a youtube link so you can watch me play tic tac toe. (https://youtu.be/CMN6kp7NuZ0).
