@@ -1,7 +1,7 @@
 # Tic Tac Toe in a GUI. PROJECT 4 SUBMISSION
 
 ## Video link
-[Here] (https://youtu.be/CMN6kp7NuZ0) is a youtube link so you can watch me play tic tac toe.
+[Here](https://youtu.be/CMN6kp7NuZ0) is a youtube link so you can watch me play tic tac toe.
 
 ## About this project
 * Built by Aeyzechiah Vasquez and Jinhong "Ivan" Liu
